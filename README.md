@@ -1,11 +1,10 @@
-- 👋 Hi, I’m @n00b0dyy
-- 
-- 👀 I’m interested in mom of my friend Tom.
-- 🌱 I’m currently learning the delicate craft of knitting sweaters for garden gnomes, because everyone deserves to stay cozy, even mythical creatures.
-- 💞️ I’m looking to collaborate on figuring out how to train my cat to make coffee in the morning.
-- 📫 How to reach me?  Send a message in a bottle, but make sure it's sealed tight – I wouldn't want my inbox flooded with seawater
-- 😄 Pronouns: Toast/Sandwich
-- ⚡ Fun fact: Penguins make sounds that can be called "singing." However, if you try to ask them for the lyrics, they are completely clueless.
+👋 Hi, I’m @n00b0dyy
+👀 I’m interested in cybersecurity, artificial intelligence, cryptography, and both high- and low-level programming.
+🌱 I’m currently expanding my expertise in digital security protocols and AI-driven analysis, while also exploring programming languages from assembly to Python.
+💼 I’m looking to collaborate on projects that challenge convention in tech, especially in secure system architecture or cryptographic development.
+📫 How to reach me? Let’s keep it old school – a well-encrypted email is always welcome.
+😄 Pronouns: he/him
+⚡ Fun fact: Penguins make sounds that could be described as "singing." However, if you ask them for the lyrics, they’ll remain mysteriously tight-beaked.
 
 <!---
 n00b0dyy/n00b0dyy is a ✨ special ✨ repository because its `README.md` (this file) appears on your GitHub profile.
