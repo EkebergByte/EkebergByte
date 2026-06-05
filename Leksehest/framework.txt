@@ -1,0 +1,97 @@
+* **Astro** – Główny framework komponentowy służący do budowy struktury witryny, zarządzania routingiem i generowania błyskawicznie ładującego się kodu HTML.
+
+
+* **Tailwind CSS** – Framework narzędziowy (utility-first) używany do szybkiego stylowania elementów strony bezpośrednio w kodzie za pomocą gotowych klas.
+
+
+* **Shadcn/ui** – Kolekcja gotowych, dostępnych komponentów interfejsu (takich jak menu, akordeony czy przyciski), które wklejasz bezpośrednio do swojego projektu i w pełni kontrolujesz.
+
+
+* **Zod** – Biblioteka wbudowana w mechanizm Content Collections w Astro, która służy do automatycznej walidacji struktury danych (np. poprawności formatu cen czy kategorii przedmiotów).
+
+
+* **Node.js (wraz z npm lub pnpm)** – Środowisko uruchomieniowe niezbędne do uruchomienia lokalnego serwera deweloperskiego i pobierania bibliotek.
+
+
+* **Git i GitHub** – Narzędzia służące do kontroli wersji oraz bezpiecznego przechowywania kodu źródłowego strony w chmurze.
+
+
+* **Vercel (lub Netlify)** – Platforma hostingowa służąca do darmowego i automatycznego publikowania strony w internecie przy każdym wysłaniu zmian do repozytorium GitHub.
+
+
+* **Visual Studio Code** – Edytor kodu, w którym będziesz pisać aplikację, oferujący oficjalne rozszerzenie ułatwiające pracę z plikami z rozszerzeniem `.astro`.
+
+------------------------------------------------------------------------------------------------------------------
+1. Architektura informacji (Sitemap)
+Musisz dokładnie rozpisać, jakie podstrony będą istnieć w domenie leksehest.no i jak użytkownik będzie się między nimi poruszał.
+
+Strona główna (/) – ogólne przedstawienie Ciebie, Twojej metodologii, opinii uczniów i wyraźne przyciski kierujące do odpowiednich sekcji (grunnskole / videregående).
+
+Strona zbiorcza Grunnskole (/grunnskole) – lista przedmiotów dla klas 1–10.
+
+Strona zbiorcza Videregående (/videregaende) – lista przedmiotów dla szkół średnich oraz przygotowania do egzaminów.
+
+Podstrona przedmiotu (/[kategoria]/[przedmiot]) – np. /videregaende/matematikk-r1. Szczegółowy opis, dla kogo jest ten przedmiot, co obejmuje cena i jak wyglądają lekcje.
+
+O mnie (/om-meg) – Twoje wykształcenie, doświadczenie i podejście do ucznia. Dla norweskich rodziców sekcja biograficzna jest kluczowym elementem budowania zaufania.
+
+Kontakt (/kontakt) – prosty formularz lub bezpośrednie dane kontaktowe.
+--------------------------------------------------------------------------------------------------------------------------------
+1. Gotowa paleta kolorów do Tailwinda
+Te grafiki dają Ci perfekcyjny zestaw kolorów (tzw. brand colors), który należy od razu przenieść do konfiguracji pliku tailwind.config.mjs. Masz tutaj doskonały balans psychologiczny:
+
+Główny kolor bazy (Ciemny granat): Buduje zaufanie, powagę i profesjonalizm (kluczowe dla rodziców płacących za lekcje). Idealny na ciemne tła sekcji, stopkę oraz główny kolor tekstu.
+
+Kolor przewododni (Teal / Mięta): Świeży, nowoczesny, kojarzący się z energią. Świetny na karty przedmiotów lub tła sekcji wyróżnionych.
+
+Kolor akcentowy (Pomarańcz / Koral z okularów): Jaskrawy i kontrastowy. Jest wręcz stworzony do najważniejszych przycisków (CTA – Call to Action) na stronie, takich jak „Zapisz się na lekcję” czy „Zamów darmową konsultację”.
+--------------------------------------------------------------------------------------------------------------------------------
+
+Masz rację, idziemy krok po kroku, bez chaosu. Zanim przejdziemy do pisania komponentów, musimy mieć pełną mapę wymagań technicznych i biznesowych.
+
+Oto kompletna lista kluczowych fundamentów, o których trzeba pamiętać od pierwszego dnia budowy **leksehest.no**:
+
+---
+
+## 1. Szybkość działania (Performance) – *Wspomniane przez Ciebie*
+
+Strona musi ładować się błyskawicznie. Każda sekunda opóźnienia to strata rodzica lub ucznia, który ucieknie do konkurencji.
+
+* **Optymalizacja obrazów:** Logo i wszelkie grafiki muszą być serwowane w nowoczesnych formatach (WebP lub AVIF zamiast ciężkich PNG/JPG). Astro ma do tego wbudowany komponent `<Image/>`.
+* **Minimalizacja kodu:** Brak zbędnych skryptów JavaScript uruchamianych na starcie (Astro domyślnie nam to gwarantuje).
+
+## 2. Responsywność z naciskiem na smartfony (Mobile-First) – *Wspomniane przez Ciebie*
+
+Ponad 70% ruchu na strony lokalnych usług w Norwegii pochodzi z telefonów (np. rodzic przeglądający ofertę w drodze z pracy).
+
+* **Projektowanie od najmniejszego ekranu:** Układ Tailwinda budujemy najpierw pod ekrany mobilne, a dopiero potem rozszerzamy go za pomocą breakpointów (np. `md:flex`, `lg:grid`) pod komputery.
+* **Elementy klikalne (Tap targets):** Przyciski i linki menu na telefonie muszą być odpowiednio duże (minimum 44x44 piksele), aby łatwo było w nie trafić kciukiem.
+
+## 3. Dostępność i prawo w Norwegii (Universell utforming / WCAG)
+
+W Norwegii kwestia dostępności stron internetowych jest regulowana prawnie przez *Difi / Uutilsynet*. Strona komercyjna musi spełniać standardy WCAG.
+
+* **Kontrast:** Tekst (ciemny granat) musi mieć odpowiednio wysoki kontrast w stosunku do tła (biel/off-white), aby osoby słabowidzące mogły go bez problemu przeczytać.
+* **Semantyka HTML:** Używanie właściwych znaczników (`<nav>`, `<main>`, `<header>`, `<footer>`, `<h1>` do `<h6>`) zamiast samych `<div>`, co pozwala czytnikom ekranowym prawidłowo interpretować stronę.
+
+## 4. Architektura SEO (Pozycjonowanie w Google)
+
+Strona musi być zbudowana tak, aby algorytmy Google rozumiały, jakie usługi oferujesz i w jakim mieście/kraju.
+
+* **Struktura nagłówków:** Na każdej podstronie może być tylko jeden nagłówek `<h1>` (główny tytuł). Reszta treści musi być logicznie podzielona na `<h2>` i `<h3>`.
+* **Meta tagi:** Każda podstrona (np. osobno dla Grunnskole, osobno dla Videregående) musi mieć swój unikalny `title` i `description` w sekcji `<head>`.
+
+## 5. Czytelność kodu i łatwość rozbudowy (Maintainability)
+
+Kod musi być zorganizowany tak, aby dodanie nowego przedmiotu lub zmiana ceny zajmowała 30 sekund, a nie wymagała przebudowy całej strony.
+
+* **Komponentyzacja:** Powtarzalne elementy (np. karta przedmiotu, przycisk, sekcja opinii) wydzielamy do osobnych plików w folderze `src/components/`.
+* **Separacja danych od wyglądu:** Teksty o przedmiotach trzymamy w plikach tekstowych (Markdown/JSON), a kod odpowiada tylko za ich wyświetlanie.
+
+## 6. Prywatność i Bezpieczeństwo (GDPR / Kukmener)
+
+Działasz na rynku europejskim/norweskim, więc musisz spełniać wymogi ochrony danych osobowych, zwłaszcza że będziesz zbierać dane kontaktowe od rodziców i uczniów.
+
+* **Bezpieczny protokół:** Wdrożenie certyfikatu SSL (HTTPS) – hostingi typu Vercel/Netlify dają to automatycznie za darmo.
+* **Formularze:** Bezpieczna obsługa danych wprowadzanych w formularzu kontaktowym (walidacja pól po stronie serwera/klienta za pomocą Zod).
+--------------------------------------------------------------------------------------------------------------------------------
