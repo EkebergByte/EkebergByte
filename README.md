@@ -1,4 +1,4 @@
-<p align="center">
+<p align="center" style="background-color: #ffffff; padding: 20px; border-radius: 14px; margin: 20px auto; max-width: 580px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
   <img height="260" src="https://github-readme-stats.vercel.app/api/top-langs/?username=EkebergByte&layout=compact&langs_count=8&count_private=true&bg_color=ffffff&title_color=0A192F&text_color=333333&icon_color=14B8A6&border_color=cccccc&border_radius=14&card_width=540&custom_title=Most%20Used%20Languages&font_size=19&hide=c,assembly,batchfile" />
 </p>
 
@@ -10,7 +10,7 @@
 
 <br>
 
-<p align="center">
+<p align="center" style="background-color: #ffffff; padding: 20px; border-radius: 14px; margin: 20px auto; max-width: 580px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
   <img src="https://github-readme-streak-stats.herokuapp.com?user=EkebergByte&theme=github-light&hide_border=true&background=ffffff00&ring=0A192F&fire=14B8A6&currStreakLabel=333333&sideNums=0A192F&dates=666666" alt="EkebergByte's streak" />
 </p>
 
@@ -89,7 +89,7 @@ My work extends across a synergistic digital ecosystem:
 
 ### 📈 GitHub Activity & Contributions
 
-<p align="center">
+<p align="center" style="background-color: #ffffff; padding: 20px; border-radius: 14px; margin: 20px auto; max-width: 580px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
   <img src="https://github-readme-streak-stats.herokuapp.com?user=EkebergByte&theme=github-light&hide_border=true&background=ffffff00&ring=0A192F&fire=14B8A6&currStreakLabel=333333&sideNums=0A192F&dates=666666" alt="EkebergByte's streak" />
 </p>
 
