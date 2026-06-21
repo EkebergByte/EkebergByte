@@ -95,7 +95,7 @@ My work extends across a synergistic digital ecosystem:
 
 ---
 
-### 💬 Connect with Lukas Ekeberg
+### 💬 Connect with Lukas
 
 <p>
   <a href="https://www.linkedin.com/in/ekeberg0304/" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn" /></a>
