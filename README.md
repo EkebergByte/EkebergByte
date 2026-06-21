@@ -4,15 +4,10 @@
 
 <br>
 
-<p align="center" style="font-family: 'Share Tech Mono', monospace; font-size: 20px; font-weight: bold;">
-  <span style="color: #0044cc;">Data Science</span> <span style="color: #666;">•</span>
-  <span style="color: #0066ff;">Machine Learning</span> <span style="color: #666;">•</span>
-  <span style="color: #0088ff;">Quant Finance</span><br>
-  <span style="color: #0055dd;">Neural Networks</span> <span style="color: #666;">•</span>
-  <span style="color: #3399ff;">Model Deployment</span> <span style="color: #666;">•</span>
-  <span style="color: #00aaff;">Algorithmic Trading</span><br>
-  <span style="color: #0033bb;">Stochastic Differential Equations</span> <span style="color: #666;">•</span>
-  <span style="color: #0077ee;">Ito Calculus</span>
+<p align="center" style="font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: bold; background: linear-gradient(to right, #002244, #0044CC, #00CCFF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 20px 0;">
+  Data Science • Machine Learning • Quant Finance<br>
+  Neural Networks • Model Deployment • Algorithmic Trading<br>
+  Stochastic Differential Equations • Ito Calculus
 </p>
 
 <br>
