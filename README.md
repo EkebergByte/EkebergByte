@@ -6,7 +6,7 @@
 
 <p align="center">
 
-  <img src="https://github.com/EkebergByte/EkebergByte/skills.svg" alt="Cyberpunk Skills" width="95%" />
+  <img src="https://github.com/EkebergByte/EkebergByte/skills.svg](https://github.com/EkebergByte/EkebergByte/blob/main/skills.svg" alt="Cyberpunk Skills" width="95%" />
 </p>
 
 <br>
