@@ -1,26 +1,32 @@
 <p align="center">
-  <img height="260" src="https://github-readme-stats.vercel.app/api/top-langs/?username=EkebergByte&layout=compact&langs_count=8&count_private=true&bg_color=00000000&title_color=00ffff&text_color=ffccff&icon_color=00ffff&border_color=ff00ff&border_radius=14&card_width=540&custom_title=Most%20Used%20Languages&font_size=19&hide=c,assembly,batchfile&theme=dark" alt="Most Used Languages">
+  <img height="260" src="https://github-readme-stats.vercel.app/api/top-langs/?username=EkebergByte&layout=compact&langs_count=8&count_private=true&bg_color=ffffff&title_color=0077b5&text_color=333333&icon_color=0077b5&border_color=dddddd&border_radius=14&card_width=540&custom_title=Most%20Used%20Languages&font_size=19&hide=c,assembly,batchfile&theme=default" alt="Most Used Languages">
+</p>
+
+<br>
+
+<p align="center" style="font-family: 'Share Tech Mono', monospace; font-size: 20px; font-weight: bold;">
+  <span style="color: #0044cc;">Data Science</span> <span style="color: #666;">•</span>
+  <span style="color: #0066ff;">Machine Learning</span> <span style="color: #666;">•</span>
+  <span style="color: #0088ff;">Quant Finance</span><br>
+  <span style="color: #0055dd;">Neural Networks</span> <span style="color: #666;">•</span>
+  <span style="color: #3399ff;">Model Deployment</span> <span style="color: #666;">•</span>
+  <span style="color: #00aaff;">Algorithmic Trading</span><br>
+  <span style="color: #0033bb;">Stochastic Differential Equations</span> <span style="color: #666;">•</span>
+  <span style="color: #0077ee;">Ito Calculus</span>
 </p>
 
 <br>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/EkebergByte/EkebergByte/main/neon-title3.svg?sanitize=true" alt="Cyberpunk Skills" width="95%" style="filter: grayscale(100%) brightness(1.5) sepia(1) hue-rotate(180deg) saturate(2);" />
-</p>
-
-<br>
-
-<p align="center">
-  <img src="https://github-readme-streak-stats.herokuapp.com?user=EkebergByte&theme=highcontrast&hide_border=true&background=00000000&ring=00ffff&fire=ff0077&currStreakLabel=ffccff&sideNums=00fff7&dates=ff66ff&currStreakNum=ff6600" alt="EkebergByte's streak">
+  <img src="https://github-readme-streak-stats.herokuapp.com?user=EkebergByte&theme=light&hide_border=false&border=dddddd&background=ffffff&ring=0077b5&fire=0044cc&currStreakLabel=333333&sideNums=333333&dates=666666&currStreakNum=0044cc" alt="EkebergByte's streak">
 </p>
 
 <p align="center">
   <i style="
-    color:#ff66ff; /* Przywrócono oryginalny kolor, który jest widoczny na ciemnym tle */
+    color:#0044cc;
     font-family:'Share Tech Mono', monospace;
     font-size: 17px;
     letter-spacing: 0.8px;
-    text-shadow: 0 0 6px #ff33cc, 0 0 12px #00ffff;
   ">
     "Between stochastic chaos and neural order lies the code that predicts the future."
   </i>
