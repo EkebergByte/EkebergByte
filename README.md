@@ -21,16 +21,17 @@
     font-size: 17px;
     letter-spacing: 0.8px;
   ">
-    "Between stochastic chaos and neural order lies the code that predicts the future."
+    "Between stochastic chaos and neural order lies the code that makes the future."
   </i>
 </p>
 
 ---
 
-### 🚀 Lukas Ekeberg: Architecting Intelligent Systems & Pedagogical Logic
+### 🚀 EkebergByte: Mathematics, Quant Finance & Agentic AI
 
-I am a **Sc.D. (Hon.)** and a **Tier-0 System Architect** specializing in the intersection of **Advanced STEM, Data Science, and Agentic AI Infrastructure**. My work focuses on building high-performance, resilient, and semantically optimized digital ecosystems.
+I am a mathematics student passionate about artificial intelligence and autonomous agentic infrastructure systems. My work bridges the theoretical rigor of mathematical analysis with financial engineering and advanced machine learning algorithms.
 
+My academic and private interests center on quantitative finance and algorithmic trading. I focus on leveraging stochastic modeling for market microstructure analysis, optimizing quantitative investment strategies, and designing intelligent, multi-agent predictive systems capable of autonomous order execution and dynamic risk management in capital markets.
 ---
 
 ### 🛠️ Core Technology Stack & Frameworks
@@ -86,13 +87,12 @@ My work extends across a synergistic digital ecosystem:
 
 ---
 
-### 💬 Connect with Lukas Ekeberg
+### 💬 Connect with me
 
 <p>
   <a href="https://www.linkedin.com/in/ekeberg0304/" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn" /></a>
-  <a href="https://github.com/EkebergByte" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white" alt="GitHub" /></a>
   <a href="https://www.kaggle.com/lukas0304" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/Kaggle-20BEFF?style=for-the-badge&logo=kaggle&logoColor=white" alt="Kaggle" /></a>
-  <a href="https://twitter.com/EkebergByte" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white" alt="X (Twitter)" /></a>
+  <a href="https://www.facebook.com/profile.php?id=61590812489565" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/Facebook-1877F2?style=for-the-badge&logo=facebook&logoColor=white" alt="Facebook" /></a>
 </p>
 
 ---
