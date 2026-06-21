@@ -1,9 +1,5 @@
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://github-readme-stats.vercel.app/api/top-langs/?username=EkebergByte&layout=compact&langs_count=8&count_private=true&bg_color=00000000&title_color=00ffff&text_color=ffccff&icon_color=00ffff&border_color=ff00ff&border_radius=14&card_width=540&custom_title=Most%20Used%20Languages&font_size=19&hide=c,assembly,batchfile&theme=dark">
-    <source media="(prefers-color-scheme: light)" srcset="https://github-readme-stats.vercel.app/api/top-langs/?username=EkebergByte&layout=compact&langs_count=8&count_private=true&bg_color=00000000&title_color=0A192F&text_color=333333&icon_color=14B8A6&border_color=cccccc&border_radius=14&card_width=540&custom_title=Most%20Used%20Languages&font_size=19&hide=c,assembly,batchfile&theme=light">
-    <img height="260" src="https://github-readme-stats.vercel.app/api/top-langs/?username=EkebergByte&layout=compact&langs_count=8&count_private=true&bg_color=00000000&title_color=0A192F&text_color=333333&icon_color=14B8A6&border_color=cccccc&border_radius=14&card_width=540&custom_title=Most%20Used%20Languages&font_size=19&hide=c,assembly,batchfile&theme=light" alt="Most Used Languages">
-  </picture>
+<p align="center" style="background-color: #ffffff; padding: 20px; border-radius: 14px; margin: 20px auto; max-width: 580px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+  <img height="260" src="https://github-readme-stats.vercel.app/api/top-langs/?username=EkebergByte&layout=compact&langs_count=8&count_private=true&bg_color=ffffff&title_color=0A192F&text_color=333333&icon_color=14B8A6&border_color=cccccc&border_radius=14&card_width=540&custom_title=Most%20Used%20Languages&font_size=19&hide=c,assembly,batchfile" />
 </p>
 
 <br>
@@ -14,12 +10,8 @@
 
 <br>
 
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://github-readme-streak-stats.herokuapp.com?user=EkebergByte&theme=highcontrast&hide_border=true&background=00000000&ring=00ffff&fire=ff0077&currStreakLabel=ffccff&sideNums=00fff7&dates=ff66ff&currStreakNum=ff6600&theme=dark">
-    <source media="(prefers-color-scheme: light)" srcset="https://github-readme-streak-stats.herokuapp.com?user=EkebergByte&theme=github-light&hide_border=true&background=00000000&ring=0A192F&fire=14B8A6&currStreakLabel=333333&sideNums=0A192F&dates=666666&theme=light">
-    <img src="https://github-readme-streak-stats.herokuapp.com?user=EkebergByte&theme=github-light&hide_border=true&background=00000000&ring=0A192F&fire=14B8A6&currStreakLabel=333333&sideNums=0A192F&dates=666666&theme=light" alt="EkebergByte's streak">
-  </picture>
+<p align="center" style="background-color: #ffffff; padding: 20px; border-radius: 14px; margin: 20px auto; max-width: 580px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+  <img src="https://github-readme-streak-stats.herokuapp.com?user=EkebergByte&theme=github-light&hide_border=true&background=ffffff00&ring=0A192F&fire=14B8A6&currStreakLabel=333333&sideNums=0A192F&dates=666666" alt="EkebergByte's streak" />
 </p>
 
 <p align="center">
@@ -95,6 +87,14 @@ My work extends across a synergistic digital ecosystem:
 
 ---
 
+### 📈 GitHub Activity & Contributions
+
+<p align="center" style="background-color: #ffffff; padding: 20px; border-radius: 14px; margin: 20px auto; max-width: 580px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+  <img src="https://github-readme-streak-stats.herokuapp.com?user=EkebergByte&theme=github-light&hide_border=true&background=ffffff00&ring=0A192F&fire=14B8A6&currStreakLabel=333333&sideNums=0A192F&dates=666666" alt="EkebergByte's streak" />
+</p>
+
+---
+
 ### 💬 Connect with Lukas Ekeberg
 
 <p>
@@ -104,4 +104,4 @@ My work extends across a synergistic digital ecosystem:
   <a href="https://twitter.com/EkebergByte" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white" alt="X (Twitter)" /></a>
 </p>
 
----```
+---
