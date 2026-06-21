@@ -4,10 +4,9 @@
 
 <br>
 
-<p align="center" style="font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: bold; background: linear-gradient(to right, #002244, #0044CC, #00CCFF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 20px 0;">
-  Data Science • Machine Learning • Quant Finance<br>
-  Neural Networks • Model Deployment • Algorithmic Trading<br>
-  Stochastic Differential Equations • Ito Calculus
+<p align="center">
+
+  <img src="https://github.com/EkebergByte/EkebergByte/skills.svg" alt="Cyberpunk Skills" width="95%" />
 </p>
 
 <br>
