@@ -28,11 +28,6 @@
 
 ---
 
-### 🚀 Lukas Ekeberg: Architecting Intelligent Systems & Pedagogical Logic
-
-I am a **Sc.D. (Hon.)** and a **Tier-0 System Architect** specializing in the intersection of **Advanced STEM, Data Science, and Agentic AI Infrastructure**. My work focuses on building high-performance, resilient, and semantically optimized digital ecosystems.
-
----
 
 ### 🛠️ Core Technology Stack & Frameworks
 
@@ -87,13 +82,6 @@ My work extends across a synergistic digital ecosystem:
 
 ---
 
-### 📈 GitHub Activity & Contributions
-
-<p align="center" style="background-color: #ffffff; padding: 20px; border-radius: 14px; margin: 20px auto; max-width: 580px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-  <img src="https://github-readme-streak-stats.herokuapp.com?user=EkebergByte&theme=github-light&hide_border=true&background=ffffff00&ring=0A192F&fire=14B8A6&currStreakLabel=333333&sideNums=0A192F&dates=666666" alt="EkebergByte's streak" />
-</p>
-
----
 
 ### 💬 Connect with Lukas
 
