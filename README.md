@@ -29,9 +29,11 @@
 
 ### 🚀 EkebergByte: Mathematics, Quant Finance & Agentic AI
 
-I am a mathematics student passionate about artificial intelligence and autonomous agentic infrastructure systems. My work bridges the theoretical rigor of mathematical analysis with financial engineering and advanced machine learning algorithms.
+---
 
+I am a mathematics student passionate about artificial intelligence and autonomous agentic infrastructure systems. My work bridges the theoretical rigor of mathematical analysis with financial engineering and advanced machine learning algorithms.
 My academic and private interests center on quantitative finance and algorithmic trading. I focus on leveraging stochastic modeling for market microstructure analysis, optimizing quantitative investment strategies, and designing intelligent, multi-agent predictive systems capable of autonomous order execution and dynamic risk management in capital markets.
+
 ---
 
 ### 🛠️ Core Technology Stack & Frameworks
