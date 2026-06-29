@@ -38,7 +38,6 @@ My academic and private interests center on quantitative finance and algorithmic
 
 ### 🛠️ Core Technology Stack & Frameworks
 
-This section showcases my expertise beyond raw programming languages.
 
 #### Frontend & Web Architecture
 <p>
