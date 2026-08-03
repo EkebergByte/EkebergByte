@@ -1,5 +1,5 @@
 <p align="center">
-  <img height="260" src="https://github-readme-stats.vercel.app/api/top-langs/?username=EkebergByte&layout=compact&langs_count=8&count_private=true&bg_color=ffffff&title_color=0077b5&text_color=333333&icon_color=0077b5&border_color=dddddd&border_radius=14&card_width=540&custom_title=Most%20Used%20Languages&font_size=19&hide=c,assembly,batchfile&theme=default" alt="Most Used Languages">
+  <img height="260" src="https://github-contribution-card.vercel.app/api/top-langs/?username=EkebergByte&layout=compact&langs_count=8&count_private=true&bg_color=ffffff&title_color=0077b5&text_color=333333&icon_color=0077b5&border_color=dddddd&border_radius=14&card_width=540&custom_title=Most%20Used%20Languages&font_size=19&hide=c,assembly,batchfile&theme=default" alt="Most Used Languages">
 </p>
 
 <br>
