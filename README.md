@@ -11,7 +11,7 @@
 <br>
 
 <p align="center">
-  <img src="https://github-readme-streak-stats.herokuapp.com?user=EkebergByte&theme=light&hide_border=false&border=dddddd&background=ffffff&ring=0077b5&fire=0044cc&currStreakLabel=333333&sideNums=333333&dates=666666&currStreakNum=0044cc" alt="EkebergByte's streak">
+  <img src="https://streak-stats.demolab.com?user=EkebergByte&theme=light&hide_border=false&border=dddddd&background=ffffff&ring=0077b5&fire=0044cc&currStreakLabel=333333&sideNums=333333&dates=666666&currStreakNum=0044cc" alt="EkebergByte's streak">
 </p>
 
 <p align="center">
