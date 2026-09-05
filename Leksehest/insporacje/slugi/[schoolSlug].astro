@@ -1,0 +1,360 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { Image } from 'astro:assets';
+import squareHarmonyImg from '../../assets/square_harmony.webp';
+import fibonacciImg from '../../assets/fibbonaci.webp';
+export const prerender = false;
+// Definiujemy dynamiczne ścieżki i lokalne slugi pod SEO dla każdego języka
+export function getStaticPaths() {
+  return [
+    // Grunnskole / Szkoła podstawowa / Primary School / Початкова школа
+    { params: { lang: "no", schoolSlug: "grunnskole" }, props: { type: "grunnskole" } },
+    { params: { lang: "pl", schoolSlug: "szkola-podstawowa" }, props: { type: "grunnskole" } },
+    { params: { lang: "en", schoolSlug: "primary-school" }, props: { type: "grunnskole" } },
+    { params: { lang: "ua", schoolSlug: "pochatkova-shkola" }, props: { type: "grunnskole" } },
+
+    // Videregående / Szkoła średnia / High School / Старша школа
+    { params: { lang: "no", schoolSlug: "videregaende" }, props: { type: "videregaende" } },
+    { params: { lang: "pl", schoolSlug: "szkola-srednia" }, props: { type: "videregaende" } },
+    { params: { lang: "en", schoolSlug: "high-school" }, props: { type: "videregaende" } },
+    { params: { lang: "ua", schoolSlug: "starsha-shkola" }, props: { type: "videregaende" } }
+  ];
+}
+
+const { lang } = Astro.params;
+const { type } = Astro.props;
+
+// Dynamiczny słownik localizedUrls rozwiązujący błąd hreflang i przełącznika flag na podstronach
+const localizedUrls = {
+  no: type === "grunnskole" ? "/no/grunnskole/" : "/no/videregaende/",
+  pl: type === "grunnskole" ? "/pl/szkola-podstawowa/" : "/pl/szkola-srednia/",
+  en: type === "grunnskole" ? "/en/primary-school/" : "/en/high-school/",
+  ua: type === "grunnskole" ? "/ua/pochatkova-shkola/" : "/ua/starsha-shkola/"
+};
+
+// Słownik tłumaczeń z silnymi, profesjonalnymi frazami dla wszystkich języków
+const translations = {
+  no: {
+    grunnskole: {
+      title: "Grunnskole (1.-10. klasse) — Privatundervisning | Leksehest",
+      desc: "Individuelt tilpasset leksehjelp og privatundervisning i matematikk, naturfag, engelsk og norsk for elever i grunnskolen.",
+      badge: "1. til 10. klasse",
+      heading1: "Trygghet og ",
+      heading2: "effektiv læring i grunnskolen",
+      intro: "Jeg tilbyr skreddersydd leksehjelp og undervisning som reduserer stress knyttet til krevende skolefag, styrker selvtilliten og bygger et solid faglig grunnlag.",
+      subject1_badge: "1+2",
+      subject1_title: "Matematikk",
+      subject1_desc: "Fra grunnleggende tallforståelse til algebra og likninger. Vi ufarliggjør tallene, bygger logisk tenkning og gjør eleven klar til prøver ved hjelp av enkle metoder.",
+      subject2_badge: "H₂O",
+      subject2_title: "Naturfag & Biologi",
+      subject2_desc: "Kroppen, celledeling, det periodiske system og energi. Vi ser på de store sammenhengene i naturen, gjør tunge teorier levende og lærer strategier for dyp mestring.",
+      subject3_badge: "ABC",
+      subject3_title: "Språk & Tekst",
+      subject3_desc: "Norsk (for innvandrere/morsmål) og engelsk. Vi jobber med setningsoppbygning, lese- og tekstforståelse samt praktisk ordforråd for å bygge språklig trygghet.",
+      imgAlt: "Trygghet og effektiv læring i grunnskolen med tilpasset undervisning"
+    },
+    videregaende: {
+      title: "Videregående (VGS) — Privatundervisning & Eksamen | Leksehest",
+      desc: "Målrettet privatundervisning i krevende realfag som R/S matte, fysikk og kjemi samt språkfag på videregående skole (VGS).",
+      badge: "Videregående skole",
+      heading1: "Mestring og ",
+      heading2: "effektiv læring på VGS",
+      intro: "Målrettet oppfølging i krevende fag. Jeg gir deg de faglige strategiei og verktøyene som kreves for å mestre pensum, fjerne eksamensstress og oppnå dine faglige mål.",
+      subject1_badge: "f(x)",
+      subject1_title: "Matematikk (P, T, R, S)",
+      subject1_desc: "Uansett om du tar praktisk (P), teoretisk (T), realfaglig (R) eller samfunnsfaglig (S) matte – vi bryter ned de vanskeligste funksjonene og derivasjonene til logiske steg.",
+      subject2_badge: "Phys",
+      subject2_title: "Fysikk & Naturfag",
+      subject2_desc: "Avansert fysikk og naturfaglig pensum. Vi fokuserer på praktisk anvendelse av teorier, løsning av tidligere eksamensoppgaver og solid forståelse av kompetansemålene.",
+      subject3_badge: "Eks",
+      subject3_title: "Eksamen",
+      subject3_desc: "Vi jobber strukturert med tidligere eksamenssett, tidsstyring og hvordan du svarer nøyaktig på det sensor ser etter. Fjern eksamensangsten med grundig trening.",
+      imgAlt: "Målrettet undervisning og effektiv læring for videregående skole (VGS)"
+    },
+    general: {
+      ctaHeading: "Klar for en enklere skolehverdag?",
+      ctaDesc: "Ta kontakt i dag for en uforpliktende prat om hvordan vi kan tilrettelegge den beste løsningen for deg eller ditt barn.",
+      ctaBtn: "Send en melding"
+    }
+  },
+  pl: {
+    grunnskole: {
+      title: "Szkoła podstawowa — Korepetycje i Pomoc w nauce | Leksehest",
+      desc: "Indywidualnie dopasowane lekcje i leksehjelp z matematyki, nauk przyrodniczych, języka angielskiego oraz norweskiego dla uczniów podstawówki w Norwegii.",
+      badge: "Klasy 1-10",
+      heading1: "Pewność siebie i ",
+      heading2: "efektywna nauka w podstawówce",
+      intro: "Oferuję dopasowaną pomoc w nauce, która eliminuje stres związany z trudnymi przedmiotami, wzmacnia pewność siebie i buduje solidne fundamenty pod dalszą edukację.",
+      subject1_badge: "1+2",
+      subject1_title: "Matematyka",
+      subject1_desc: "Od podstawowego rozumienia liczb po algebrę i równania. Odczarowujemy trudne zagadnienia, uczymy logicznego myślenia i bezstresowo przygotowujemy do sprawdzianów.",
+      subject2_badge: "H₂O",
+      subject2_title: "Przyroda i Biologia",
+      subject2_desc: "Budowa ciała, komórki, układ okresowy i energia. Pomagam zrozumieć procesy zachodzące w naturze i tłumaczę trudną teorię na żywych, prostych przykładach.",
+      subject3_badge: "ABC",
+      subject3_title: "Języki i Komunikacja",
+      subject3_desc: "Norweski (dla obcokrajowców i szkolny) oraz angielski. Pracujemy nad budową zdań, rozumieniem tekstów i praktycznym słownictwem, aby uczeń swobodnie mówił i pisał.",
+      imgAlt: "Korepetycje i efektywna pomoc w nauce dla szkoły podstawowej w Norwegii"
+    },
+    videregaende: {
+      title: "Liceum / Szkoła średnia (VGS) — Korepetycje | Leksehest",
+      desc: "Skuteczne przygotowanie do egzaminów oraz korepetycje z matematyki (R, S, T, P), fizyki i języków dla uczniów szkół średnich (VGS) w Norwegii.",
+      badge: "Szkoła średnia (VGS)",
+      heading1: "Wiedza i ",
+      heading2: "efektywna nauka w szkole średniej",
+      intro: "Ukierunkowane wsparcie w wymagających przedmiotach. Przekazuję sprawdzone strategie naukowe i metody, które pozwalają opanować pensum i zdać egzaminy bez stresu.",
+      subject1_badge: "f(x)",
+      subject1_title: "Matematyka (P, T, R, S)",
+      subject1_desc: "Niezależnie od profilu (P, T, R, S) – rozbijamy najtrudniejsze funkcje, pochodne i zadania maturalne na proste, logiczne kroki, które łatwo zapamiętać.",
+      subject2_badge: "Phys",
+      subject2_title: "Fizyka i Naturfag",
+      subject2_desc: "Zaawansowane zagadnienia z fizyki i biologii/chemii (naturfag). Skupiamy się na praktycznym rozwiązywaniu zadań, arkuszach egzaminacyjnych i celach nauczania.",
+      subject3_badge: "Eks",
+      subject3_title: "Przygotowanie do egzaminu",
+      subject3_desc: "Pracujemy na autentycznych arkuszach maturalnych z ubiegłych lat. Uczę zarządzania czasem i zdradzam, na co dokładnie zwraca uwagę egzaminator (sensor).",
+      imgAlt: "Zaawansowane korepetycje i efektywna nauka z matematyki i fizyki dla uczniów szkół średnich VGS"
+    },
+    general: {
+      ctaHeading: "Chcesz uczyć się bez stresu i poprawić oceny?",
+      ctaDesc: "Skontaktuj się ze mną już dziś, aby niezobowiązująco porozmawiać o najlepszym planie nauki dla Ciebie lub Twojego dziecka.",
+      ctaBtn: "Wyślij wiadomość"
+    }
+  },
+  en: {
+    grunnskole: {
+      title: "Primary School Tutoring & Homework Help in Norway | Leksehest",
+      desc: "Tailored tutoring and homework assistance (leksehjelp) in math, science, English, and Norwegian for primary and middle school students.",
+      badge: "Grades 1 to 10",
+      heading1: "Confidence and ",
+      heading2: "effective learning in school",
+      intro: "I offer customized homework help and tutoring designed to relieve school-related stress, build lasting self-confidence, and strengthen core skills.",
+      subject1_badge: "1+2",
+      subject1_title: "Mathematics",
+      subject1_desc: "From basic numeracy to algebra and equations. We simplify numbers, foster logical thinking, and prepare students for tests using straightforward, visual methods.",
+      subject2_badge: "H₂O",
+      subject2_title: "Science & Biology",
+      subject2_desc: "The human body, cells, the periodic table, and energy. We connect the dots in nature, bring heavy theory to life, and master essential curriculum goals.",
+      subject3_badge: "ABC",
+      subject3_title: "Language & Reading",
+      subject3_desc: "Norwegian (for foreigners/school curriculum) and English. We focus on syntax, text comprehension, and functional vocabulary to eliminate language barriers.",
+      imgAlt: "Comprehensive tutoring and effective learning for primary school students in Norway"
+    },
+    videregaende: {
+      title: "High School (VGS) Tutoring & Exam Preparation | Leksehest",
+      desc: "Specialized tutoring in demanding subjects including math (R/S/T/P), physics, science, and languages for high school (VGS) students.",
+      badge: "High School (VGS)",
+      heading1: "Top results and ",
+      heading2: "effective learning in high school",
+      intro: "Targeted guidance in challenging subjects. I provide the study strategies, practical methods, and test-taking tools required to master the curriculum and reduce anxiety.",
+      subject1_badge: "f(x)",
+      subject1_title: "Mathematics (P, T, R, S)",
+      subject1_desc: "Whether you study practical (P), theoretical (T), advanced math (R), or social math (S) – we break down complex formulas and derivatives into simple steps.",
+      subject2_badge: "Phys",
+      subject2_title: "Physics & Science",
+      subject2_desc: "Advanced physics and biology topics. We focus on applying theoretical principles to exam-style problems and mastering core competence goals.",
+      subject3_badge: "Eks",
+      subject3_title: "Exam Preparation",
+      subject3_desc: "We work systematically with past papers, time-management techniques, and understand exactly what the external grader (sensor) is looking for.",
+      imgAlt: "Targeted advanced math and physics tutoring for effective learning on high school VGS"
+    },
+    general: {
+      ctaHeading: "Ready for a smoother school experience?",
+      ctaDesc: "Get in touch today for a friendly, no-obligation chat on how we can arrange the best learning plan for you or your child.",
+      ctaBtn: "Send a message"
+    }
+  },
+  ua: {
+    grunnskole: {
+      title: "Початкова школа — Репетитор та Допомога з уроками | Leksehest",
+      desc: "Індивідуальні заняття та допомога з домашніми завданнями з математики, природознавства та мов для учнів початкової школи в Норвегії.",
+      badge: "1-10 класи",
+      heading1: "Впевненість та ",
+      heading2: "ефективне навчання в школі",
+      intro: "Пропоную індивідуальні заняття, які знімають напругу навколо складних шкільних предметів, зміцнюють віру в свої сили та будують надійну базу для навчання.",
+      subject1_badge: "1+2",
+      subject1_title: "Математика",
+      subject1_desc: "Від базової лічби до алгебри та рівнянь. Ми робимо цифри зрозумілими, розвиваємо логічне мислення та готуємо до перевірочних робіт за допомогою простих методів.",
+      subject2_badge: "H₂O",
+      subject2_title: "Природничі науки та біологія",
+      subject2_desc: "Будова тіла, клітини, періодична таблиця та енергія. Допомагаю зрозуміти взаємозв'язки в природі та пояснюю складні наукові теорії на живих прикладах.",
+      subject3_badge: "ABC",
+      subject3_title: "Мови та читання",
+      subject3_desc: "Норвезька (для іноземців/шкільна програма) та англійська мови. Працюємо над структурою речень, розумінням текстів та словниковим запасом для вільного спілкування.",
+      imgAlt: "Турботливе репетиторство та ефективне навчання для учнів початкових класів у Норвегії"
+    },
+    videregaende: {
+      title: "Старша школа (VGS) — Репетитор та Підготовка до іспитів | Leksehest",
+      desc: "Індивідуальні репетиторські послуги та підготовка до іспитів з математики, фізики та мов для учнів старших шкіл (VGS) у Норвегії.",
+      badge: "Старша школа (VGS)",
+      heading1: "Знання та ",
+      heading2: "ефективне навчання у старшій школі",
+      intro: "Спрямована підтримка у складних предметах. Я даю ефективні навчальні стратегії та інструменти, які допомагають засвоїти програму та скласить іспити без стресу.",
+      subject1_badge: "f(x)",
+      subject1_title: "Математика (P, T, R, S)",
+      subject1_desc: "Незалежно від обраного профілю (P, T, R, S) – мы розберемо найскладніші функції, похідні та рівняння на зрозумілі логічні кроки.",
+      subject2_badge: "Phys",
+      subject2_title: "Фізика та точні науки",
+      subject2_desc: "Поглиблена фізика та природничий курс (naturfag). Ми зосереджуємося на практичному розв'язанні завдаń, розборі екзаменаційних робіт минулих років та вимогах програми.",
+      subject3_badge: "Eks",
+      subject3_title: "Екзаменаційна підготовка",
+      subject3_desc: "Ми системно працюємо з реальними тестами минулих років. Вчу правильно планувати час на іспиті та відповідати саме на те, що оцінює екзаменатор (sensor).",
+      imgAlt: "Професійне репетиторство з математики та фізики для ефективного навчання старшокласників норвезьких шкіл VGS"
+    },
+    general: {
+      ctaHeading: "Бажаєте покращити успішність та навчатися без стресу?",
+      ctaDesc: "Зв'яжіться зі мною вже сьогодні для безкоштовної консультації, щоб підібрати найкращий формат занять для вас чи вашої дитини.",
+      ctaBtn: "Надіслати повідомлення"
+    }
+  }
+};
+
+const t = translations[lang]?.[type] || translations.no.grunnskole;
+const g = translations[lang]?.general || translations.no.general;
+
+// Dynamiczny link do kontaktu dostosowany do reguł językowych (slugów)
+const contactLink = lang === 'en' ? `/${lang}/contact/` : `/${lang}/kontakt/`;
+
+// Wybór odpowiedniej zoptymalizowanej grafiki w zależności od typu strony
+const activeImg = type === "grunnskole" ? squareHarmonyImg : fibonacciImg;
+---
+
+<BaseLayout title={t.title} description={t.desc} lang={lang} localizedUrls={localizedUrls}>
+  <main class="bg-white text-slate-900 min-h-screen">
+    
+    <!-- SEKCJA HERO (Zoptymalizowana pod kątem CLS, A11y, Plain Language) -->
+    <section class="relative bg-white pt-12 pb-8 md:pt-32 md:pb-24 border-b border-slate-100">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center">
+          
+        <div class="flex flex-col justify-center text-center lg:text-left lg:col-span-6 relative z-10">
+                    <span class="text-xs md:text-sm font-bold tracking-widest uppercase text-[#0A192F] bg-white border border-[#0A192F] px-6 py-2.5 rounded-full w-fit mx-auto lg:mx-0 mb-4">
+                    {t.badge}
+                    </span>
+            <!-- Usunięto niekontrastowy zielony kolor na rzecz granatu dla 100/100 Accessibility -->
+            <h1 class="text-3xl font-extrabold tracking-tight text-[#173460] sm:text-5xl lg:text-6xl leading-tight uppercase">
+              {t.heading1}<span class="text-[#173460]">{t.heading2}</span>
+            </h1>
+            <p class="mt-6 text-base text-slate-600 sm:text-lg leading-relaxed max-w-xl mx-auto lg:mx-0 font-medium">
+              {t.intro}
+            </p>
+            <div class="mt-8 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+              <!-- NAPRAWIONY PRZYCISK #1 (Bezpieczna szerokość, wysokie paddingi, brak rozjeżdżania tekstu) -->
+              <a 
+                href={contactLink} 
+                class="inline-flex items-center justify-center bg-[#173460] hover:bg-[#1f427a] text-white text-base sm:text-lg font-extrabold px-10 sm:px-14 py-5 rounded-2xl transition-all duration-200 shadow-xl tracking-wider uppercase w-full sm:w-auto min-w-[280px]"
+              >
+                {g.ctaBtn}
+              </a>
+            </div>
+          </div>
+
+          <!-- KONTENER NA GRAFIKĘ (Zabezpieczona wydajność LCP dzięki preloadingowi oraz formatowi WebP) -->
+          <div class="relative lg:col-span-6 flex justify-center items-center select-none pointer-events-none">
+            <Image 
+              src={activeImg} 
+              alt={t.imgAlt} 
+              loading="eager"
+              decoding="async"
+              class="w-full max-w-[340px] sm:max-w-[420px] md:max-w-[460px] h-auto object-contain"
+            />
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- SEKCJA OFERTY SZCZEGÓŁOWEJ (Wysoki kontrast, czytelna struktura i18n) -->
+    <section class="bg-slate-50 py-16 md:py-24 border-b border-slate-100">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        
+        <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
+          
+          <!-- Blok Przedmiotowy 1 -->
+          <div class="bg-white border border-slate-200/60 rounded-[28px] p-8 shadow-sm hover:shadow-md transition-all flex flex-col gap-6">
+            <div class="flex items-center gap-4">
+              <div class="w-14 h-14 bg-[#173460]/10 text-[#173460] rounded-2xl flex items-center justify-center font-extrabold text-lg shrink-0">
+                {t.subject1_badge}
+              </div>
+            <!-- Zamieniono h3 na h2 dla poprawnej struktury oraz zmieniono kolor nawiasu na czytelny granat -->
+            <h2 class="text-xl sm:text-2xl font-extrabold text-[#173460] tracking-tight uppercase leading-snug">
+                            {t.subject1_title.includes('(') ? (
+                            <>
+                                {t.subject1_title.split(' (')[0]}
+                                <span class="block text-sm sm:text-base font-bold text-[#173460]/80 mt-0.5 normal-case">
+                                ({t.subject1_title.split(' (')[1]}
+                                </span>
+                            </>
+                            ) : (
+                            t.subject1_title
+                            )}
+                        </h2>
+            </div>
+            <p class="text-slate-600 text-sm sm:text-base leading-relaxed font-normal">
+              {t.subject1_desc}
+            </p>
+          </div>
+
+          <!-- Blok Przedmiotowy 2 -->
+          <div class="bg-white border border-slate-200/60 rounded-[28px] p-8 shadow-sm hover:shadow-md transition-all flex flex-col gap-6">
+            <div class="flex items-center gap-4">
+              <div class="w-14 h-14 bg-[#173460]/10 text-[#173460] rounded-2xl flex items-center justify-center font-extrabold text-lg shrink-0">
+                {t.subject2_badge}
+              </div>
+              <!-- Zamieniono h3 na h2 dla poprawnej struktury nagłówków -->
+              <h2 class="text-xl sm:text-2xl font-extrabold text-[#173460] tracking-tight uppercase leading-snug">
+                {t.subject2_title}
+              </h2>
+            </div>
+            <p class="text-slate-600 text-sm sm:text-base leading-relaxed font-normal">
+              {t.subject2_desc}
+            </p>
+          </div>
+
+          <!-- Blok Przedmiotowy 3 -->
+          <div class="bg-white border border-slate-200/60 rounded-[28px] p-8 shadow-sm hover:shadow-md transition-all flex flex-col gap-6">
+            <div class="flex items-center gap-4">
+              <div class="w-14 h-14 bg-[#173460]/10 text-[#173460] rounded-2xl flex items-center justify-center font-extrabold text-lg shrink-0">
+                {t.subject3_badge}
+              </div>
+              <!-- Zamieniono h3 na h2 dla poprawnej struktury nagłówków -->
+              <h2 class="text-xl sm:text-2xl font-extrabold text-[#173460] tracking-tight uppercase leading-snug">
+                {t.subject3_title}
+              </h2>
+            </div>
+            <p class="text-slate-600 text-sm sm:text-base leading-relaxed font-normal">
+              {t.subject3_desc}
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- SEKCJA WEZWANIA DO DZIAŁANIA (CTA) -->
+    <section class="bg-white py-16 md:py-24">
+      <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+        <div class="relative bg-[#173460] text-white rounded-[32px] p-8 md:p-16 text-center space-y-6 overflow-hidden shadow-xl">
+          <div class="absolute w-24 h-24 bg-[#12ba87]/15 -top-6 -right-6 rounded-bl-[40px] pointer-events-none"></div>
+          <div class="absolute w-24 h-24 bg-[#fd6847]/15 -bottom-6 -left-6 rounded-tr-[40px] pointer-events-none"></div>
+          
+          <h2 class="text-2xl md:text-4xl font-extrabold tracking-tight relative z-10 uppercase">
+            {g.ctaHeading}
+          </h2>
+          <p class="text-slate-300 max-w-lg mx-auto text-base sm:text-lg relative z-10 leading-relaxed font-medium">
+            {g.ctaDesc}
+          </p>
+          <div class="pt-4 relative z-10 flex justify-center">
+            <!-- NAPRAWIONY PRZYCISK #2 (Wysokie paddingi, brak rozjeżdżania tekstu, stabilna pigułka) -->
+            <a 
+              href={contactLink} 
+              class="inline-flex items-center justify-center bg-white hover:bg-slate-50 text-[#173460] font-extrabold text-base sm:text-lg px-10 sm:px-14 py-5 rounded-2xl transition-all duration-200 shadow-xl tracking-wider uppercase w-full sm:w-auto min-w-[280px]"
+            >
+              {g.ctaBtn}
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</BaseLayout>

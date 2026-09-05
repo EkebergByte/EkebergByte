@@ -1,0 +1,55 @@
+# Zdywersyfikowana lista monopolistów z różnych podsektorów
+watchlist:
+  # Mega-Cap & E-Commerce & Platformy
+  - AAPL
+  - MSFT
+  - GOOGL
+  - AMZN
+  - META
+  # Półprzewodniki & Sprzęt (Fabless, Foundry, Equipment)
+  - NVDA
+  - TSM
+  - ASML
+  - AVGO
+  - AMD
+  - QCOM
+  - AMAT
+  - LRCX
+  - MU
+  - TXN
+  # Enterprise Software & Chmura (SaaS)
+  - ADBE
+  - CRM
+  - NOW
+  - INTU
+  - ORCL
+  # Cyberbezpieczeństwo
+  - PANW
+  - FTNT
+
+# Wielka Ósemka Technologiczna (Mag 8) do monitoringu cyklu CapEx i dat raportów
+mag8:
+  - NVDA
+  - MSFT
+  - AAPL
+  - GOOGL
+  - AMZN
+  - META
+  - TSLA
+  - AVGO
+
+# Wagi składowe dla AlphaScore (Suma = 1.0)
+weights:
+  real_fcf_yield: 0.25      # Filar A: Gotówka operacyjna minus CapEx minus SBC
+  roic_quality: 0.15        # Filar B: Prawdziwy ROIC (NOPAT / Invested Capital)
+  peg_valuation: 0.15       # Filar C: Wycena do tempa wzrostu
+  erp_spread: 0.15          # Filar C: Premia nad obligacjami 10Y
+  reverse_dcf: 0.15         # Filar C: Odwrócone DCF
+  technical_timing: 0.15    # Filar D: RSI Wildera (14) + Odchylenie 200 SMA
+
+# Progi graniczne
+thresholds:
+  min_alpha_score: 65.0     # Minimum do wygenerowania alertu
+  rsi_oversold: 42.0        # Próg wyprzedania
+  discount_rate_dcf: 0.09   # WACC bazowy: 9%
+  terminal_growth_dcf: 0.03 # Wzrost terminalny: 3%
