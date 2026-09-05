@@ -1,0 +1,777 @@
+﻿=== FILE: .\config.yaml ===
+# Zdywersyfikowana lista monopolistów z różnych podsektorów
+watchlist:
+  # Mega-Cap & E-Commerce & Platformy
+  - AAPL
+  - MSFT
+  - GOOGL
+  - AMZN
+  - META
+  # Półprzewodniki & Sprzęt (Fabless, Foundry, Equipment)
+  - NVDA
+  - TSM
+  - ASML
+  - AVGO
+  - AMD
+  - QCOM
+  - AMAT
+  - LRCX
+  - MU
+  - TXN
+  # Enterprise Software & Chmura (SaaS)
+  - ADBE
+  - CRM
+  - NOW
+  - INTU
+  - ORCL
+  # Cyberbezpieczeństwo
+  - PANW
+  - FTNT
+
+# Wielka Ósemka Technologiczna (Mag 8) do monitoringu cyklu CapEx i dat raportów
+mag8:
+  - NVDA
+  - MSFT
+  - AAPL
+  - GOOGL
+  - AMZN
+  - META
+  - TSLA
+  - AVGO
+
+# Wagi składowe dla AlphaScore (Suma = 1.0)
+weights:
+  real_fcf_yield: 0.25      # Filar A: Gotówka operacyjna minus CapEx minus SBC
+  roic_quality: 0.15        # Filar B: Prawdziwy ROIC (NOPAT / Invested Capital)
+  peg_valuation: 0.15       # Filar C: Wycena do tempa wzrostu
+  erp_spread: 0.15          # Filar C: Premia nad obligacjami 10Y
+  reverse_dcf: 0.15         # Filar C: Odwrócone DCF
+  technical_timing: 0.15    # Filar D: RSI Wildera (14) + Odchylenie 200 SMA
+
+# Progi graniczne
+thresholds:
+  min_alpha_score: 65.0     # Minimum do wygenerowania alertu
+  rsi_oversold: 42.0        # Próg wyprzedania
+  discount_rate_dcf: 0.09   # WACC bazowy: 9%
+  terminal_growth_dcf: 0.03 # Wzrost terminalny: 3%
+
+
+=== FILE: .\komenda_dump.txt ===
+$outFile="project_dump.txt"; Get-ChildItem -Recurse -File | Where-Object { $_.FullName -notmatch '[\\/](\.git|\.venv|venv|__pycache__|\.idea|\.vscode|dist|build|node_modules)[\\/]' -and $_.Name -notmatch '^(\.env.*|project_dump\.txt|dump\.txt|fred_state\.json)$' -and $_.Extension -notmatch '\.(joblib|pkl|pyc|pyd|exe|dll|zip|tar|gz|parquet|png|jpg|jpeg|gif|ico|sqlite|db)$' } | ForEach-Object { "=== FILE: $(Resolve-Path -Relative $_.FullName) ==="; Get-Content -LiteralPath $_.FullName -Raw -Encoding UTF8; "`n" } | Set-Content -LiteralPath $outFile -Encoding UTF8; Write-Host "✓ Gotowe! Wygenerowano: $outFile" -ForegroundColor Green
+
+
+=== FILE: .\main.py ===
+import os
+import yaml
+from dotenv import load_dotenv
+from src.data_fetcher import DataFetcher
+from src.valuation_engine import ValuationEngine
+from src.notifier import Notifier
+
+load_dotenv()
+
+
+def main():
+    with open("config.yaml", "r", encoding="utf-8") as f:
+        config = yaml.safe_load(f)
+
+    print("=" * 80)
+    print("🚀 START SKANERA ALPHAMOAT-RADAR + EARNINGS & CAPEX SENTINEL")
+    print("=" * 80)
+
+    rf_rate = DataFetcher.get_10y_treasury_yield()
+    print(f"Bieżąca stopa wolna od ryzyka (US 10Y Yield): {rf_rate * 100:.2f}%\n")
+
+    engine = ValuationEngine(config, rf_rate)
+    notifier = Notifier()
+
+    results = []
+    watchlist = config.get("watchlist", [])
+
+    print("🔍 SKANOWANIE FUNDAMENTALNE WATCHLISTY:")
+    for ticker in watchlist:
+        print(f"  Analizuję: {ticker:<6} ...", end="", flush=True)
+        raw_data = DataFetcher.fetch_stock_data(ticker)
+        if not raw_data:
+            print(" [POMINIĘTO: Brak danych]")
+            continue
+
+        metrics = engine.evaluate_stock(raw_data)
+        results.append(metrics)
+        flags = f" [FLAGI: {len(metrics['danger_signals'])}]" if metrics["danger_signals"] else ""
+        print(f" AlphaScore: {metrics['alpha_score']:4.1f} | RSI: {metrics['rsi_14']:4.1f} | FCF Yield: {metrics['real_fcf_yield_pct']:4.1f}%{flags}")
+
+    results.sort(key=lambda x: x["alpha_score"], reverse=True)
+    min_score = config["thresholds"]["min_alpha_score"]
+    top_opportunities = [r for r in results if r["alpha_score"] >= min_score]
+
+    # === 1. KALENDARZ NADCHODZĄCYCH WYNIKÓW DLA CAŁEJ WATCHLISTY (SORTOWANIE CHRONOLOGICZNE) ===
+    print("\n" + "=" * 80)
+    print("📅 KALENDARZ NADCHODZĄCYCH RAPORTÓW (CAŁA WATCHLISTA - WG KOLEJNOŚCI):")
+    print("=" * 80)
+    print(f"{'TICKER':<7} | {'DATA RAPORTU':<14} | {'POZOSTAŁO DNI':<15} | {'STATUS RYZYKA'}")
+    print("-" * 80)
+
+    all_calendar = []
+    for r in results:
+        e_info = r.get("earnings_info")
+        if e_info and e_info.get("days_left") is not None:
+            days = e_info["days_left"]
+            d_str = e_info["date"]
+        else:
+            days = None
+            d_str = "Brak daty (TBD)"
+
+        all_calendar.append({
+            "ticker": r["ticker"],
+            "date": d_str,
+            "days_left": days,
+        })
+
+    # Sortowanie: najpierw te najbliższe (np. za 5 dni), na końcu te bez daty (TBD)
+    all_calendar.sort(key=lambda x: x["days_left"] if x["days_left"] is not None else 9999)
+
+    for item in all_calendar:
+        days = item["days_left"]
+        if days is not None:
+            if days <= 7:
+                status = "🔴 BLISKO (Ruletka - Nie kupować!)"
+            elif days <= 21:
+                status = "🟡 Za 2-3 tygodnie"
+            else:
+                status = "🟢 Bezpieczny dystans"
+        else:
+            status = "⚪ Oczekuje na ogłoszenie"
+
+        days_display = str(days) if days is not None else "-"
+        print(f"{item['ticker']:<7} | {item['date']:<14} | {days_display:<15} | {status}")
+
+    # === 2. AUDYT CAPEX HYPERSCALERÓW AI ===
+    # Sprawdzamy wydatki kluczowych gigantów AI obecnych na liście
+    hyperscalers = [t for t in ["NVDA", "MSFT", "AAPL", "GOOGL", "AMZN", "META", "AVGO", "TSM"] if t in watchlist]
+
+    print("\n" + "=" * 80)
+    print("🏗️  AUDYT OSTATNICH WYNIKÓW I CAPEX GIGANTÓW AI (CZY CYKL ZWALNIA?):")
+    print("=" * 80)
+    print(f"{'TICKER':<7} | {'CAPEX (Q0)':<11} | {'ZMIANA KW/KW':<13} | {'ZYSK EPS (BEAT/MISS)':<22} | {'STATUS CYKLU'}")
+    print("-" * 80)
+
+    capex_history = []
+    for ticker in hyperscalers:
+        h = DataFetcher.get_mag8_previous_earnings_and_capex(ticker)
+        capex_history.append(h)
+        sign = "+" if h["capex_qoq_pct"] > 0 else ""
+        qoq_str = f"{sign}{h['capex_qoq_pct']}%"
+        capex_str = f"${h['last_capex_billions']}B"
+        print(f"{ticker:<7} | {capex_str:<11} | {qoq_str:<13} | {h['eps_verdict']:<22} | {h['capex_status']}")
+
+    print("=" * 80)
+
+    # Wysłanie raportu
+    report_html = notifier.format_report(top_opportunities, results, all_calendar, capex_history, rf_rate)
+
+    has_threats = any(len(r.get("danger_signals", [])) > 0 for r in results)
+    if top_opportunities or has_threats:
+        notifier.send_telegram(report_html)
+
+
+if __name__ == "__main__":
+    main()
+
+
+=== FILE: .\requirements.txt ===
+yfinance>=0.2.40
+pandas>=2.1.0
+numpy>=1.26.0
+pyyaml>=6.0.1
+requests>=2.31.0
+python-dotenv>=1.0.0
+
+
+=== FILE: .\src\data_fetcher.py ===
+import datetime
+import logging
+from typing import Any, Dict, List, Optional
+import numpy as np
+import pandas as pd
+import yfinance as yf
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
+
+
+class DataFetcher:
+    @staticmethod
+    def get_10y_treasury_yield() -> float:
+        """Pobiera aktualną rentowność 10-letnich obligacji USA (^TNX)."""
+        try:
+            tnx = yf.Ticker("^TNX")
+            hist = tnx.history(period="5d")
+            if not hist.empty:
+                return float(hist["Close"].iloc[-1]) / 100.0
+        except Exception as e:
+            logging.warning(f"Błąd pobierania ^TNX: {e}. Przyjmuję domyślne 4.25%.")
+        return 0.0425
+
+    @staticmethod
+    def _find_row(df: Optional[pd.DataFrame], keywords: List[str]) -> Optional[pd.Series]:
+        """Wyszukuje wiersz w sprawozdaniu po słowach kluczowych."""
+        if df is None or df.empty:
+            return None
+        for idx in df.index:
+            idx_clean = str(idx).lower().replace("_", " ").strip()
+            for kw in keywords:
+                if kw in idx_clean:
+                    res = df.loc[idx]
+                    return res.iloc[0] if isinstance(res, pd.DataFrame) else res
+        return None
+
+    @classmethod
+    def get_upcoming_earnings_date(cls, ticker: str) -> Optional[Dict[str, Any]]:
+        """Pobiera z serwerów giełdowych najbliższą datę publikacji wyników."""
+        try:
+            t = yf.Ticker(ticker)
+            today = datetime.date.today()
+
+            # 1. Próba przez get_earnings_dates
+            try:
+                ed = t.get_earnings_dates(limit=6)
+                if ed is not None and not ed.empty:
+                    now = pd.Timestamp.now(tz=ed.index.dtype.tz)
+                    future = ed[ed.index >= now].sort_index()
+                    if not future.empty:
+                        target_dt = future.index[0].to_pydatetime().date()
+                        days_left = (target_dt - today).days
+                        return {"date": target_dt.strftime("%Y-%m-%d"), "days_left": days_left}
+            except Exception:
+                pass
+
+            # 2. Fallback przez calendar
+            cal = t.calendar
+            if cal is not None:
+                ed_val = None
+                if isinstance(cal, dict):
+                    ed_val = cal.get("Earnings Date")
+                elif isinstance(cal, pd.DataFrame):
+                    if "Earnings Date" in cal.index:
+                        ed_val = cal.loc["Earnings Date"].values
+                    elif "Earnings Date" in cal.columns:
+                        ed_val = cal["Earnings Date"].values
+
+                if ed_val is not None and len(ed_val) > 0:
+                    val = ed_val[0]
+                    target_dt = val.date() if hasattr(val, "date") else pd.to_datetime(val).date()
+                    days_left = (target_dt - today).days
+                    if days_left >= 0:
+                        return {"date": target_dt.strftime("%Y-%m-%d"), "days_left": days_left}
+        except Exception as e:
+            logging.debug(f"Błąd pobierania daty earnings dla {ticker}: {e}")
+        return None
+
+    @classmethod
+    def get_mag8_previous_earnings_and_capex(cls, ticker: str) -> Dict[str, Any]:
+        """
+        Pobiera zrealizowane dane z OSTATNIEGO kwartału:
+        - Faktyczny CapEx w mld USD i dynamikę kw/kw oraz r/r
+        - Zaskoczenie zyskiem EPS (Beat/Miss)
+        - Klasyfikację trendu inwestycyjnego
+        """
+        res = {
+            "ticker": ticker,
+            "last_capex_billions": 0.0,
+            "capex_qoq_pct": 0.0,
+            "capex_yoy_pct": 0.0,
+            "capex_status": "⚪ Brak danych",
+            "last_eps_surprise_pct": None,
+            "eps_verdict": "Brak danych",
+            "last_reported_date": "Niedawno",
+        }
+        try:
+            t = yf.Ticker(ticker)
+            q_cf = t.quarterly_cashflow
+
+            # 1. Analiza CapEx z przepływów pieniężnych
+            capex_series = cls._find_row(q_cf, ["capital expenditure", "capital expenditures"])
+            if capex_series is not None and len(capex_series) >= 2:
+                c0 = abs(float(capex_series.iloc[0]))
+                c1 = abs(float(capex_series.iloc[1]))
+                res["last_capex_billions"] = round(c0 / 1e9, 2)
+                
+                if c1 > 0:
+                    qoq = ((c0 - c1) / c1) * 100.0
+                    res["capex_qoq_pct"] = round(qoq, 1)
+
+                if len(capex_series) >= 5:
+                    c4 = abs(float(capex_series.iloc[4]))
+                    if c4 > 0:
+                        res["capex_yoy_pct"] = round(((c0 - c4) / c4) * 100.0, 1)
+
+                # Klasyfikacja trendu CapEx
+                if res["capex_qoq_pct"] > 8.0:
+                    res["capex_status"] = "🟢 Agresywna rozbudowa AI"
+                elif res["capex_qoq_pct"] < -8.0:
+                    res["capex_status"] = "🚨 CIĘCIE WYDATKÓW (Chłodzenie)"
+                else:
+                    res["capex_status"] = "🟡 Ustabilizowane wydatki"
+
+            # 2. Wyniki finansowe i Zaskoczenie EPS
+            try:
+                ed = t.get_earnings_dates(limit=8)
+                if ed is not None and not ed.empty:
+                    now = pd.Timestamp.now(tz=ed.index.dtype.tz)
+                    past = ed[ed.index < now].sort_index(ascending=False)
+                    if not past.empty:
+                        last_q = past.iloc[0]
+                        res["last_reported_date"] = past.index[0].strftime("%Y-%m-%d")
+                        
+                        # Sprawdzamy kolumny Surprise(%) lub Reported/Estimate
+                        for col in last_q.index:
+                            if "surprise" in str(col).lower():
+                                val = last_q[col]
+                                if pd.notna(val):
+                                    surp = float(val) * 100.0 if abs(val) < 1.0 else float(val)
+                                    res["last_eps_surprise_pct"] = round(surp, 1)
+                                    res["eps_verdict"] = f"🟢 Pobicie (+{surp:.1f}%)" if surp >= 0 else f"🔴 Wpadka ({surp:.1f}%)"
+                                break
+            except Exception:
+                pass
+
+        except Exception as e:
+            logging.debug(f"Błąd analizy poprzednich wyników dla {ticker}: {e}")
+
+        return res
+
+    @classmethod
+    def fetch_stock_data(cls, ticker: str) -> Optional[Dict[str, Any]]:
+        """Pobiera komplet danych TTM z obsługą walut ADR."""
+        try:
+            t = yf.Ticker(ticker)
+            info = t.info
+            hist = t.history(period="1y")
+
+            if hist.empty or len(hist) < 200:
+                logging.warning(f"Zbyt krótka historia notowań dla {ticker}.")
+                return None
+
+            q_cf = t.quarterly_cashflow
+            q_is = t.quarterly_financials
+            q_bs = t.quarterly_balance_sheet
+
+            # Korekta walutowa dla spółek zagranicznych (np. TSM w TWD, ASML w EUR)
+            fin_currency = info.get("financialCurrency", "USD")
+            fx_rate = 1.0
+            if ticker == "TSM" and fin_currency == "TWD":
+                fx_rate = 0.031  # 1 TWD ≈ 0.031 USD
+            elif ticker == "ASML" and fin_currency == "EUR":
+                fx_rate = 1.08   # 1 EUR ≈ 1.08 USD
+
+            # 1. Cash Flow TTM
+            sbc_series = cls._find_row(q_cf, ["stock based compensation", "share based compensation"])
+            ocf_series = cls._find_row(q_cf, ["operating cash flow", "cash flow from continuing operating"])
+            capex_series = cls._find_row(q_cf, ["capital expenditure", "capital expenditures"])
+
+            capex_qoq_change_pct = 0.0
+            latest_capex = 0.0
+
+            if capex_series is not None and len(capex_series) >= 2:
+                c_now = abs(float(capex_series.iloc[0])) * fx_rate
+                c_prev = abs(float(capex_series.iloc[1])) * fx_rate
+                latest_capex = c_now
+                if c_prev > 0:
+                    capex_qoq_change_pct = ((c_now - c_prev) / c_prev) * 100.0
+
+            if ocf_series is not None and len(ocf_series) >= 4:
+                ocf_ttm = float(ocf_series.iloc[:4].fillna(0).sum()) * fx_rate
+                capex_ttm = (abs(float(capex_series.iloc[:4].fillna(0).sum())) if capex_series is not None else 0.0) * fx_rate
+                sbc_ttm = (float(sbc_series.iloc[:4].fillna(0).sum()) if sbc_series is not None else 0.0) * fx_rate
+            else:
+                annual_cf = t.cashflow
+                ocf_row = cls._find_row(annual_cf, ["operating cash flow", "cash flow from continuing operating"])
+                capex_row = cls._find_row(annual_cf, ["capital expenditure", "capital expenditures"])
+                sbc_row = cls._find_row(annual_cf, ["stock based compensation", "share based compensation"])
+
+                ocf_ttm = (float(ocf_row.iloc[0]) if ocf_row is not None else float(info.get("operatingCashflow") or 0.0)) * fx_rate
+                capex_ttm = (abs(float(capex_row.iloc[0])) if capex_row is not None else 0.0) * fx_rate
+                sbc_ttm = (float(sbc_row.iloc[0]) if sbc_row is not None else 0.0) * fx_rate
+
+            reported_fcf_ttm = ocf_ttm - capex_ttm
+            real_fcf_ttm = reported_fcf_ttm - sbc_ttm
+
+            # 2. Rachunek wyników TTM
+            ebit_series = cls._find_row(q_is, ["operating income", "ebit"])
+            pretax_series = cls._find_row(q_is, ["pretax income", "income before tax"])
+            tax_series = cls._find_row(q_is, ["tax provision", "income tax expense"])
+
+            if ebit_series is not None and len(ebit_series) >= 4:
+                ebit_ttm = float(ebit_series.iloc[:4].fillna(0).sum()) * fx_rate
+                pretax_ttm = (float(pretax_series.iloc[:4].fillna(0).sum()) if pretax_series is not None else 0.0) * fx_rate
+                tax_ttm = (float(tax_series.iloc[:4].fillna(0).sum()) if tax_series is not None else 0.0) * fx_rate
+            else:
+                ebit_ttm = float(info.get("operatingIncome") or info.get("ebitda") or 0.0) * fx_rate
+                pretax_ttm = ebit_ttm
+                tax_ttm = ebit_ttm * 0.21
+
+            effective_tax_rate = float(np.clip(tax_ttm / pretax_ttm, 0.15, 0.25)) if pretax_ttm > 0 and tax_ttm > 0 else 0.21
+
+            # 3. Bilans
+            total_debt = float(info.get("totalDebt") or 0.0) * fx_rate
+            total_equity = float(info.get("totalStockholderEquity") or 0.0) * fx_rate
+            cash = float(info.get("totalCash") or 0.0) * fx_rate
+            total_assets = float(info.get("totalAssets") or 0.0) * fx_rate
+
+            shares_change_pct = 0.0
+            if q_bs is not None and not q_bs.empty:
+                shares_row = cls._find_row(q_bs, ["ordinary shares number", "share issued", "common stock shares outstanding"])
+                if shares_row is not None and len(shares_row) >= 4:
+                    try:
+                        s_now = float(shares_row.iloc[0])
+                        s_prev_year = float(shares_row.iloc[3])
+                        if s_prev_year > 0:
+                            shares_change_pct = (s_now - s_prev_year) / s_prev_year
+                    except Exception:
+                        pass
+
+            earnings_info = cls.get_upcoming_earnings_date(ticker)
+
+            return {
+                "ticker": ticker,
+                "info": info,
+                "hist": hist,
+                "real_fcf_ttm": real_fcf_ttm,
+                "reported_fcf_ttm": reported_fcf_ttm,
+                "sbc_ttm": sbc_ttm,
+                "ebit_ttm": ebit_ttm,
+                "tax_rate": effective_tax_rate,
+                "total_debt": total_debt,
+                "total_equity": total_equity,
+                "cash": cash,
+                "total_assets": total_assets,
+                "shares_change_pct": shares_change_pct,
+                "capex_qoq_change_pct": capex_qoq_change_pct,
+                "latest_capex_millions": round(latest_capex / 1e6, 1),
+                "earnings_info": earnings_info,
+            }
+        except Exception as e:
+            logging.error(f"Krytyczny błąd pobierania danych dla {ticker}: {e}")
+            return None
+
+
+=== FILE: .\src\notifier.py ===
+import html
+import os
+from typing import Any, Dict, List
+import requests
+
+
+class Notifier:
+    def __init__(self):
+        self.bot_token = os.getenv("TELEGRAM_BOT_TOKEN")
+        self.chat_id = os.getenv("TELEGRAM_CHAT_ID")
+
+    def send_telegram(self, message_html: str):
+        if not self.bot_token or not self.chat_id:
+            print("[INFO] Brak TELEGRAM_BOT_TOKEN lub TELEGRAM_CHAT_ID. Pomijam wysyłkę.")
+            return
+
+        url = f"https://api.telegram.org/bot{self.bot_token}/sendMessage"
+        try:
+            res = requests.post(
+                url,
+                json={"chat_id": self.chat_id, "text": message_html, "parse_mode": "HTML"},
+                timeout=10,
+            )
+            res.raise_for_status()
+            print("✓ Pomyślnie wysłano raport na Telegram.")
+        except Exception as e:
+            print(f"✗ Błąd podczas wysyłki Telegram: {e}")
+
+    @staticmethod
+    def format_report(
+        opportunities: List[Dict[str, Any]],
+        all_metrics: List[Dict[str, Any]],
+        all_calendar: List[Dict[str, Any]],
+        capex_history: List[Dict[str, Any]],
+        rf_rate: float,
+    ) -> str:
+        msg = "🎯 <b>ALPHAMOAT RADAR: RAPORT RYNKOWY</b>\n"
+        msg += f"<i>Rentowność 10Y US Treasury: {rf_rate * 100:.2f}%</i>\n\n"
+
+        # === 1. CZERWONE FLAGI I OSTRZEŻENIA ===
+        threats = []
+        for m in all_metrics:
+            for s in m.get("danger_signals", []):
+                threats.append(f"• <b>${m['ticker']}</b>: {s}")
+
+        if threats:
+            msg += "🚨 <b>SYSTEMOWE SYGNAŁY OSTRZEGAWCZE:</b>\n"
+            msg += "\n".join(threats[:8]) + "\n\n"
+
+        # === 2. WYKRYTE ASYMETRYCZNE OKAZJE ===
+        if not opportunities:
+            msg += "☕ <i>Brak spółek spełniających kryteria AlphaScore. Cierpliwość to zysk.</i>\n\n"
+        else:
+            msg += "🔥 <b>WYKRYTE ASYMETRYCZNE OKAZJE:</b>\n"
+            for op in opportunities:
+                growth_str = (
+                    f"<b>{op['implied_growth_pct']}% r/r</b>"
+                    if op["implied_growth_pct"] is not None
+                    else "⚠️ <i>FCF &lt; 0</i>"
+                )
+                msg += f"💎 <b>${op['ticker']}</b> | AlphaScore: <b>{op['alpha_score']}/100</b>\n"
+                msg += f" • Kurs: <code>${op['price']}</code> | FCF Yield: <b>{op['real_fcf_yield_pct']}%</b>\n"
+                msg += f" • ROIC: <b>{op['roic_pct']}%</b> | Reverse DCF: {growth_str}\n"
+                msg += f" • RSI Wildera: <b>{op['rsi_14']}</b> | 200 SMA: <b>{op['sma200_dev_pct']}%</b>\n"
+                if op.get("net_buyback"):
+                    msg += " • 💎 <i>Zarząd agresywnie skupuje akcje (Net Buyback)</i>\n"
+                msg += "───────────────────\n"
+
+        # === 3. PEŁNY KALENDARZ RAPORTÓW KWARTALNYCH (POSORTOWANY) ===
+        msg += "📅 <b>KALENDARZ WYNIKÓW (WG TERMINU):</b>\n"
+        for item in all_calendar:
+            days = item["days_left"]
+            ticker = item["ticker"]
+            date_str = item["date"]
+
+            if days is not None:
+                if days <= 7:
+                    ico = "🔴"
+                    desc = f"za <b>{days} dni! (NIE KUPOWAĆ)</b>"
+                elif days <= 21:
+                    ico = "🟡"
+                    desc = f"za {days} dni"
+                else:
+                    ico = "🟢"
+                    desc = f"za {days} dni"
+            else:
+                ico = "⚪"
+                desc = "TBD"
+
+            msg += f"{ico} <b>${ticker:<5}</b>: <code>{date_str}</code> ({desc})\n"
+        msg += "\n"
+
+        # === 4. AUDYT CAPEX HYPERSCALERÓW AI ===
+        if capex_history:
+            msg += "🏗️ <b>AUDYT WYDATKÓW CAPEX AI (Czy tną inwestycje?):</b>\n"
+            for h in capex_history:
+                sign = "+" if h["capex_qoq_pct"] > 0 else ""
+                msg += f"• <b>${h['ticker']}</b>: CapEx <code>${h['last_capex_billions']}B</code> ({sign}{h['capex_qoq_pct']}% kw/kw) | {h['eps_verdict']}\n"
+
+        return msg
+
+
+=== FILE: .\src\valuation_engine.py ===
+import logging
+from typing import Any, Dict, Optional
+import numpy as np
+import pandas as pd
+
+
+class ValuationEngine:
+    def __init__(self, config: Dict[str, Any], rf_rate: float):
+        self.cfg = config
+        self.weights = config["weights"]
+        self.rf_rate = rf_rate
+
+    @staticmethod
+    def calculate_wilder_rsi(prices: pd.Series, period: int = 14) -> float:
+        """
+        Oryginalny wskaźnik RSI J. Wellesa Wildera oparty na wykładniczym
+        wygładzaniu (Wilder's RMA / ewm), identyczny z TradingView i Bloomberg.
+        """
+        if len(prices) < period + 2:
+            return 50.0
+
+        delta = prices.diff()
+        gain = delta.clip(lower=0.0)
+        loss = -delta.clip(upper=0.0)
+
+        avg_gain = gain.ewm(alpha=1.0 / period, min_periods=period, adjust=False).mean()
+        avg_loss = loss.ewm(alpha=1.0 / period, min_periods=period, adjust=False).mean()
+
+        last_gain = float(avg_gain.iloc[-1])
+        last_loss = float(avg_loss.iloc[-1])
+
+        if last_loss == 0.0:
+            return 100.0 if last_gain > 0 else 50.0
+
+        rs = last_gain / last_loss
+        rsi = 100.0 - (100.0 / (1.0 + rs))
+        return float(np.clip(rsi, 0.0, 100.0))
+
+    @staticmethod
+    def calculate_real_roic(
+        ebit: float,
+        tax_rate: float,
+        total_debt: float,
+        total_equity: float,
+        cash: float,
+        total_assets: float
+    ) -> float:
+        """
+        Kalkulacja rzeczywistego ROIC = NOPAT / Invested Capital.
+        Dostosowana do różnych struktur bilansowych:
+         - Standard: Dług + Kapitał Własny - Gotówka
+         - Spółki z ujemnym kapitałem własnym przez buybacki (np. Apple):
+           zabezpieczenie oparte na aktywach operacyjnych netto.
+        """
+        nopat = ebit * (1.0 - tax_rate)
+        if ebit <= 0:
+            return 0.0
+
+        invested_capital = total_debt + total_equity - cash
+
+        # Obsługa ujemnego kapitału przez agresywny skup akcji
+        if invested_capital <= 0:
+            invested_capital = max(total_assets - cash, 0.1 * total_assets)
+
+        if invested_capital <= 0:
+            return 0.35  # Domyślna wysoka rentowność dla monopolu działającego na ujemnym kapitale
+
+        roic = nopat / invested_capital
+        return float(np.clip(roic, -0.20, 1.0))
+
+    def solve_reverse_dcf(self, fcf: float, market_cap: float) -> Optional[float]:
+        """
+        Odwrócone DCF:
+        Zwraca wymaganą roczną stopę wzrostu FCF w % lub None, jeśli FCF <= 0.
+        """
+        if fcf <= 0 or market_cap <= 0:
+            return None  # Ujemny FCF = brak możliwości wyliczenia implied growth
+
+        r = max(self.cfg["thresholds"]["discount_rate_dcf"], self.rf_rate + 0.045)
+        tg = self.cfg["thresholds"]["terminal_growth_dcf"]
+
+        low, high = -0.30, 0.70
+        implied_g = 0.0
+
+        for _ in range(25):
+            g = (low + high) / 2
+            pv = 0.0
+            cf = fcf
+            for t in range(1, 11):
+                cf *= (1.0 + g)
+                pv += cf / ((1.0 + r) ** t)
+            tv = (cf * (1.0 + tg)) / (r - tg)
+            pv_tv = tv / ((1.0 + r) ** 10)
+            model_val = pv + pv_tv
+
+            if model_val < market_cap:
+                low = g
+            else:
+                high = g
+            implied_g = g
+
+        return round(implied_g * 100.0, 2)
+
+    def evaluate_stock(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        info = data["info"]
+        hist = data["hist"]
+        real_fcf = data["real_fcf_ttm"]
+        shares_change = data["shares_change_pct"]
+        earnings_info = data.get("earnings_info")
+        capex_qoq = data.get("capex_qoq_change_pct", 0.0)
+
+        price = float(hist["Close"].iloc[-1])
+        market_cap = float(info.get("marketCap") or (price * info.get("sharesOutstanding", 1)))
+        sma200 = float(hist["Close"].rolling(200).mean().iloc[-1])
+        sma200_dev = ((price - sma200) / sma200) * 100.0
+
+        # 1. Prawdziwe RSI Wildera
+        rsi = self.calculate_wilder_rsi(hist["Close"], period=14)
+
+        # 2. Prawdziwy ROIC
+        roic = self.calculate_real_roic(
+            ebit=data["ebit_ttm"],
+            tax_rate=data["tax_rate"],
+            total_debt=data["total_debt"],
+            total_equity=data["total_equity"],
+            cash=data["cash"],
+            total_assets=data["total_assets"],
+        )
+
+        # 3. Real FCF Yield TTM
+        real_fcf_yield = (real_fcf / market_cap) if market_cap > 0 else 0.0
+
+        # 4. Wycena i PEG
+        forward_pe = float(info.get("forwardPE") or info.get("trailingPE") or 25.0)
+        peg_ratio = float(info.get("pegRatio") or 1.5)
+        if peg_ratio <= 0:
+            peg_ratio = 2.5  # Kara punktowa za ujemny/zaburzony wzrost
+
+        # 5. Equity Risk Premium Spread
+        earnings_yield = (1.0 / forward_pe) if forward_pe > 0 else 0.0
+        erp_spread = (earnings_yield - self.rf_rate) * 100.0
+
+        # 6. Reverse DCF
+        implied_growth = self.solve_reverse_dcf(real_fcf, market_cap)
+
+        # Consensus analityków
+        target_price = float(info.get("targetMeanPrice") or price)
+        analyst_upside = ((target_price - price) / price) * 100.0
+
+        # === SYSTEM PUNKTACJI ALPHASCORE (0 - 100) ===
+        # Filar A: Real FCF Yield
+        if real_fcf <= 0:
+            s_fcf = 0.0
+        else:
+            s_fcf = np.clip((real_fcf_yield - 0.02) / 0.04 * 100.0, 0.0, 100.0)
+
+        # Filar B: ROIC (Fosa kapitałowa)
+        s_roic = np.clip((roic - 0.10) / 0.15 * 100.0, 0.0, 100.0)
+
+        # Filar C: PEG
+        s_peg = np.clip((2.2 - peg_ratio) / 1.2 * 100.0, 0.0, 100.0)
+
+        # Filar C: ERP Spread
+        s_erp = np.clip((erp_spread - (-0.5)) / 2.5 * 100.0, 0.0, 100.0)
+
+        # Filar C: Reverse DCF
+        if implied_growth is None:
+            s_dcf = 0.0
+        else:
+            s_dcf = np.clip((18.0 - implied_growth) / 12.0 * 100.0, 0.0, 100.0)
+
+        # Filar D: Timing Techniczny
+        s_rsi = np.clip((50.0 - rsi) / 20.0 * 100.0, 0.0, 100.0)
+        s_sma = np.clip((-sma200_dev) / 15.0 * 100.0, 0.0, 100.0)
+        s_tech = (s_rsi * 0.6) + (s_sma * 0.4)
+
+        w = self.weights
+        alpha_score = (
+            s_fcf * w["real_fcf_yield"]
+            + s_roic * w["roic_quality"]
+            + s_peg * w["peg_valuation"]
+            + s_erp * w["erp_spread"]
+            + s_dcf * w["reverse_dcf"]
+            + s_tech * w["technical_timing"]
+        )
+
+        # === DETEKCJA SYSTEMOWYCH SYGNAŁÓW OSTRZEGAWCZYCH ===
+        danger_signals = []
+        if earnings_info and 0 <= earnings_info["days_left"] <= 7:
+            danger_signals.append(f"⚠️ Wyniki za {earnings_info['days_left']} dni (Zakaz otwierania pozycji!)")
+        if capex_qoq < -8.0:
+            danger_signals.append(f"🚨 Cięcie wydatków CapEx o {capex_qoq:.1f}% kw/kw (Schłodzenie inwestycji AI)")
+        if real_fcf <= 0:
+            danger_signals.append("⚠️ Ujemny Real FCF (Spółka przepala gotówkę)")
+
+        return {
+            "ticker": data["ticker"],
+            "price": round(price, 2),
+            "alpha_score": round(alpha_score, 1),
+            "real_fcf_yield_pct": round(real_fcf_yield * 100.0, 2),
+            "sbc_millions": round(data["sbc_ttm"] / 1e6, 1),
+            "peg_ratio": round(peg_ratio, 2),
+            "forward_pe": round(forward_pe, 1),
+            "erp_spread_pct": round(erp_spread, 2),
+            "implied_growth_pct": implied_growth,
+            "roic_pct": round(roic * 100.0, 1),
+            "rsi_14": round(rsi, 1),
+            "sma200_dev_pct": round(sma200_dev, 1),
+            "analyst_upside_pct": round(analyst_upside, 1),
+            "net_buyback": True if shares_change < -0.01 else False,
+            "earnings_info": earnings_info,
+            "capex_qoq_pct": round(capex_qoq, 1),
+            "danger_signals": danger_signals,
+        }
+
+

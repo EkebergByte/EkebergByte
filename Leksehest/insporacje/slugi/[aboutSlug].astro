@@ -1,0 +1,331 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { Image } from 'astro:assets';
+
+export const prerender = false;
+
+import authorImg from '../../assets/photo_of_author.webp';
+import privateImg from '../../assets/privatundervisning.webp';
+import boardImg from '../../assets/tavla.webp';
+import classImg from '../../assets/klasse.webp';
+import homeworkImg from '../../assets/leksehjelp.webp';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: "no", aboutSlug: "om-meg" } },
+    { params: { lang: "pl", aboutSlug: "o-mnie" } },
+    { params: { lang: "en", aboutSlug: "about-me" } },
+    { params: { lang: "ua", aboutSlug: "pro-mene" } },
+  ];
+}
+
+const { lang } = Astro.params;
+
+const localizedUrls = {
+  no: "/no/om-meg/",
+  pl: "/pl/o-nie/",
+  en: "/en/about-me/",
+  ua: "/ua/pro-mene/"
+};
+
+const translations = {
+  no: {
+    title: "Om meg — Leksehest",
+    desc: "Din personlige veileder og privatlærer i Norge. Tett oppfølging som hjelper elever med å lykkes med skolearbeidet.",
+    badge: "Personlig oppfølging som virkelig gjør en forskjell",
+    headingPart1: "Din suksess. ",
+    headingPart2: "Mitt ansvar.",
+    introText: "Hei! Jeg heter Lukas og er grunnleggeren av Leksehest.no. Siden jeg kommuniserer flytende på norsk, engelsk, polsk og russisk, can jeg forklare komplekse faglige begreper på en enkel og forståelig måte – uansett hvilken bakgrunn eller morsmål studenten har. Gjennom tett oppfølging og tilpassede undervisningstimer hjelper jeg både barn, ungdom og voksne med å mestre fagene, styrke selvtilliten og få en enklere skolehverdag.",
+    
+    sectionTitleStandard: "Høy standard",
+    sectionDescStandard: "Jeg kjenner den norske læreplanen ut og inn. Ved å koble dyp forståelse av kompetansemålene med skreddersydd pedagogikk, sikrer jeg at undervisningen treffer presist der det trengs. Du får strategiene og den faglige kvaliteten som kreves for å mestre fagene og lykkes til eksamen.",
+    
+    sectionTitlePedagogy: "Individuell pedagogikk",
+    sectionDescPedagogy: "Ingen elever er like. Jeg tilpasser pedagogikken, tempoet og oppgavene etter den enkelte elevs behov. Målet er ikke bare gode karakterer, men å fjerne stress knyttet til krevende realfag og språkfag.",
+    
+    faqPromoHeading: "Vil du vite mer?",
+    faqPromoBtn: "Se ofte stilte spørsmål (FAQ)",
+
+    ctaHeading: "Skal vi nå målene dine i skolen – sammen?",
+    ctaDesc: "Ta kontakt i dag for en uforpliktende prat om hvordan jeg kan tilrettelegge den beste løsningen for deg eller ditt barn.",
+    ctaBtn: "Send en melding",
+    
+    imgAuthorAlt: "Lukas Ekeberg — din personlige veileder og privatlærer i Norge",
+    imgAidsAlt1: "Privatundervisning og leksehjelp for elever i Norge",
+    imgAidsAlt2: "Fokusert lærer ved tavlen forklarer komplekse skolefag",
+    imgAidsAlt3: "Motiverte elever i et klasserom som opplever mestring i fagene",
+    imgAidsAlt4: "Individuell oppfølging og leksehjelp i matematikk og naturfag"
+  },
+  pl: {
+    title: "O mnie — Leksehest",
+    desc: "Twój osobisty korepetytor i doradca edukacyjny w Norwegii. Indywidualne podejście, które pomaga uczniom osiągać lepsze wyniki w nauce.",
+    badge: "Indywidualne wsparcie, które naprawdę robi różnicę",
+    headingPart1: "Twój sukces. ",
+    headingPart2: "Moja odpowiedzialność.",
+    introText: "Cześć! Nazywam się Lukas i jestem założycielem Leksehest.no. Ponieważ swobodnie komunikuję się w języku norweskim, angielskim, polskim oraz rosyjskim, potrafię wytłumaczyć nawet najtrudniejsze zagadnienia szkolne w prosty i przejrzysty sposób – bez względu na to, z jakiego kraju pochodzi uczeń. Dzięki indywidualnemu podejściu i dopasowanym lekcjom pomagam dzieciom, młodzieży oraz dorosłym zrozumieć trudne tematy, odbudować pewność siebie i sprawić, by codzienna nauka stała się prostsza.",
+    
+    sectionTitleStandard: "Wysoki standard",
+    sectionDescStandard: "Znam norweską podstawę programową od podszewki. Łącząc głębokie zrozumienie celów nauczania (kompetansemål) z dopasowaną pedagogiką, dbam o to, aby każda lekcja trafiała dokładnie w punkt. Otrzymasz sprawdzone strategie i merytoryczne wsparcie, które są niezbędne do opanowania materiału i zdania egzaminów z sukcesem.",
+    
+    sectionTitlePedagogy: "Indywidualna pedagogika",
+    sectionDescPedagogy: "Nie ma dwóch takich samych uczniów. Zawsze dopasowuję metody, tempo pracy oraz zadania do indywidualnych potrzeb i możliwości danej osoby. Moim celem są nie tylko lepsze oceny, ale też całkowite wyeliminowanie stresu związanego z trudnymi przedmiotami ścisłymi czy językowymi.",
+    
+    faqPromoHeading: "Chcesz dowiedzieć się więcej?",
+    faqPromoBtn: "Najczęstsze pytania (FAQ)",
+
+    ctaHeading: "Osiągnijmy Twoje cele w nauce – wspólnie!",
+    ctaDesc: "Skontaktuj się ze mną już dziś, aby porozmawiać o tym, jak możemy wspólnie zaplanować najlepsze rozwiązanie dla Ciebie lub Twojego dziecka.",
+    ctaBtn: "Wyślij wiadomość",
+    
+    imgAuthorAlt: "Lukas Ekeberg — Twój osobisty korepetytor i doradca edukacyjny w Norwegii",
+    imgAidsAlt1: "Indywidualne korepetycje i pomoc w odrabianiu lekcji w Norwegii",
+    imgAidsAlt2: "Skupiony nauczyciel przy tablicy wyjaśnia skomplikowane zagadnienia szkolne",
+    imgAidsAlt3: "Zmotywowani uczniowie w klasie, którzy odnoszą sukcesy w nauce",
+    imgAidsAlt4: "Osobiste wsparcie i pomoc naukowa z matematyki oraz przedmiotów ścisłych"
+  },
+  en: {
+    title: "About Me — Leksehest",
+    desc: "Your personal educational advisor and tutor in Norway. Tailored academic support designed to help students succeed in school.",
+    badge: "Personal guidance that truly makes a difference",
+    headingPart1: "Your success. ",
+    headingPart2: "My responsibility.",
+    introText: "Hi! My name is Lukas, and I am the founder of Leksehest.no. Since I communicate fluently in Norwegian, English, Polish, and Russian, I am able to explain complex academic concepts in a clear and accessible way, regardless of the student's country of origin. Through close personal support and tailored tutoring sessions, I help children, teenagers, and adults understand complex school subjects, rebuild self-confidence, and make daily studying easier.",
+    
+    sectionTitleStandard: "High Standards",
+    sectionDescStandard: "I know the Norwegian curriculum inside out. By linking a deep understanding of core educational goals (kompetansemål) with customized teaching methods, I ensure that my tutoring targets exactly where it is needed most. You will gain the study strategies and academic quality required to master your subjects and succeed in exams.",
+    
+    sectionTitlePedagogy: "Individualized Pedagogy",
+    sectionDescPedagogy: "No two students are alike. I adapt my teaching methods, pace, and exercises to match each student's unique needs. My goal is not just achieving higher grades, but also eliminating the anxiety often related to challenging science, math, or language subjects.",
+    
+    faqPromoHeading: "Want to learn more?",
+    faqPromoBtn: "Frequently Asked Questions (FAQ)",
+
+    ctaHeading: "Let's reach your educational goals – together!",
+    ctaDesc: "Get in touch today for a free chat about how we can design the optimal educational solution for you or your child.",
+    ctaBtn: "Send a message",
+    
+    imgAuthorAlt: "Lukas Ekeberg — your personal educational advisor and tutor in Norway",
+    imgAidsAlt1: "One-on-one private tutoring and homework support for students in Norway",
+    imgAidsAlt2: "Focused teacher at the blackboard explaining complex school subjects",
+    imgAidsAlt3: "Motivated students experiencing academic breakthrough in a classroom",
+    imgAidsAlt4: "Individualized guidance and academic support in mathematics and science"
+  },
+  ua: {
+    title: "Про мене — Leksehest",
+    desc: "Ваш індивідуальний репетитор та освітній консультант у Норвегії. Підтримка, яка допомагає учням досягати успіхів у навчанні.",
+    badge: "Особистий підхід, який дійсно дає видимий результат",
+    headingPart1: "Ваш успіх. ",
+    headingPart2: "Моя відповідальність.",
+    introText: "Привіт! Мене звати Лукас, і я є засновником Leksehest.no. Оскільки я вільно спілкуюся норвезькою, англійською, польською та російською мовами, я можу просто та доступно пояснити навіть найскладніші навчальні теми — незалежно від того, з якої країни походить учень. Завдяки тісній підтримці та індивідуально підібраним урокам я допомагаю дітям, підліткам та дорослим розібратися в складних темах, зміцнити впевненість у собі та полегшити щоденне шкільне життя.",
+    
+    sectionTitleStandard: "Високий стандарт",
+    sectionDescStandard: "Я знаю норвезьку шкільну програму вздовж і впоперек. Поєднуючи глибоке розуміння навчальних цілей (kompetansemål) з адаптованою педагогікою, я дбаю про те, щоб кожне заняття приносило максимальну користь. Ви отримаєте перевірені стратегії та академічну підтримку, необхідні для засвоєння матеріалу та успішного складання іспитів.",
+    
+    sectionTitlePedagogy: "Індивідуальна педагогіка",
+    sectionDescPedagogy: "Немає двох однакових учнів. Я завжди адаптую методи, темп навчання та завдання під індивідуальні потреби кожної людини. Моя мета – не лише високі оцінки, але й усунення стресу, пов'язаного з важкими точними науками чи іноземними мовами.",
+    
+    faqPromoHeading: "Бажаєте дізнатися більше?",
+    faqPromoBtn: "Поширені запитання (FAQ)",
+
+    ctaHeading: "Досягнемо ваших цілей у навчанні — разом!",
+    ctaDesc: "Зв'яжіться зі мною вже сьогодні, щоб без зобов'язань обговорити, як ми можемо організувати найкраще навчання для вас чи вашої дитини.",
+    ctaBtn: "Надіслати повідомлення",
+    
+    imgAuthorAlt: "Лукас Екеберг — ваш особистий репетитор та освітній консультант у Норвегії",
+    imgAidsAlt1: "Індивідуальні заняття та допомога у виконанні домашніх завдань у Норвегії",
+    imgAidsAlt2: "Зосереджений вчитель біля дошки пояснює складний навчальний матеріал",
+    imgAidsAlt3: "Мотивовані учні в класі, які досягають успіхів у навчанні",
+    imgAidsAlt4: "Особиста підтримка та допомога з математики і природничих наук"
+  }
+};
+
+const t = translations[lang] || translations.no;
+const contactLink = lang === 'en' ? `/${lang}/contact/` : `/${lang}/kontakt/`;
+
+const faqLinks = {
+  no: "/no/ofte-stilte-sporsmaal/",
+  pl: "/pl/czesto-zadawane-pytania/",
+  en: "/en/faq/",
+  ua: "/ua/faq/"
+};
+const faqLink = faqLinks[lang] || faqLinks.no;
+---
+
+<BaseLayout title={t.title} description={t.desc} lang={lang} localizedUrls={localizedUrls}>
+  <main class="bg-white text-slate-900 overflow-hidden">
+    
+    <section class="relative bg-white pt-20 pb-12 md:pt-32 md:pb-24 border-b border-slate-100" aria-labelledby="about-heading">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center">
+          
+          <div class="flex flex-col justify-center text-center lg:text-left lg:col-span-7">
+            <span class="text-sm md:text-base font-bold tracking-wide uppercase text-slate-500 mb-3 block">
+              {t.badge}
+            </span>
+            
+            <h1 id="about-heading" class="text-4xl font-extrabold tracking-tight text-[#173460] sm:text-5xl lg:text-6xl leading-tight uppercase">
+              {t.headingPart1}<span class="text-[#12ba87]">{t.headingPart2}</span>
+            </h1>
+            
+            <p class="mt-6 text-base text-slate-600 sm:text-lg leading-relaxed max-w-2xl mx-auto lg:mx-0 font-medium">
+              {t.introText}
+            </p>
+          </div>
+
+          <div class="flex justify-center items-center w-full lg:col-span-5">
+            <div class="relative p-1 w-full max-w-[380px] sm:max-w-[420px] mx-auto lg:max-w-full">
+              
+              <div class="absolute w-32 h-32 sm:w-36 sm:h-36 bg-[#fd6847] -top-8 sm:-top-12 -right-8 sm:-right-12 rounded-bl-[56px] rounded-tr-[32px] opacity-95 z-0"></div>
+              <div class="absolute w-32 h-32 sm:w-36 sm:h-36 bg-[#173460] -bottom-10 sm:-bottom-14 -left-10 sm:-left-14 rounded-tr-[56px] rounded-bl-[32px] opacity-95 z-0"></div>
+              <div class="absolute w-24 h-24 sm:w-28 sm:h-28 bg-[#12ba87] -bottom-4 sm:-bottom-6 -left-4 sm:-left-6 rounded-tr-[44px] rounded-bl-[24px] opacity-95 z-0"></div>
+
+              <div class="relative z-10 p-4 bg-white shadow-2xl rounded-[32px] border border-slate-100/80 overflow-hidden">
+                <Image 
+                  src={authorImg} 
+                  alt={t.imgAuthorAlt} 
+                  width={400}
+                  height={500}
+                  loading="eager"
+                  decoding="async"
+                  class="relative z-10 w-full h-auto rounded-2xl shadow-sm object-cover aspect-[4/5]"
+                />
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <section class="relative bg-slate-50 py-16 md:py-24 border-b border-slate-100">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-x-16 lg:items-start">
+          
+          <div class="bg-white p-8 rounded-3xl border border-slate-200/60 shadow-sm hover:shadow-md transition-all order-1 lg:col-span-5 lg:col-start-8 lg:row-start-1">
+            <div class="w-14 h-14 bg-[#173460] rounded-2xl rotate-45 flex items-center justify-center mb-6 shadow-md">
+              <svg class="w-7 h-7 text-white -rotate-45" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+            </div>
+            <h2 class="text-2xl font-extrabold text-[#173460] tracking-tight mb-4 uppercase">
+              {t.sectionTitleStandard}
+            </h2>
+            <p class="text-base text-slate-600 leading-relaxed font-normal">
+              {t.sectionDescStandard}
+            </p>
+          </div>
+
+          <div class="mosaic-container relative flex justify-center items-center w-full h-[380px] sm:h-[480px] md:h-[540px] overflow-hidden lg:overflow-visible order-2 lg:col-span-7 lg:col-start-1 lg:row-start-1 lg:row-span-2 self-center">
+            <div class="mosaic-rotated relative rotate-45 scale-75 sm:scale-90 md:scale-100 transition-transform duration-300">
+              <div class="grid grid-cols-4 gap-2 sm:gap-3 w-[400px] h-[300px] sm:w-[480px] sm:h-[360px] md:w-[560px] md:h-[420px]">
+                
+                <div class="aspect-square bg-[#fd6847] rounded-xl sm:rounded-2xl"></div>
+                <div class="aspect-square overflow-hidden bg-slate-100 rounded-xl sm:rounded-2xl shadow-sm">
+                  <Image src={privateImg} alt={t.imgAidsAlt1} width={140} height={140} loading="lazy" class="-rotate-45 scale-[1.15] w-full h-full object-cover object-center" />
+                </div>
+                <div class="aspect-square bg-[#12ba87] rounded-xl sm:rounded-2xl"></div>
+                <div class="aspect-square bg-[#fd6847] rounded-xl sm:rounded-2xl"></div>
+
+                <div class="aspect-square overflow-hidden bg-slate-100 rounded-xl sm:rounded-2xl shadow-sm">
+                  <Image src={boardImg} alt={t.imgAidsAlt2} width={140} height={140} loading="lazy" class="-rotate-45 scale-[1.25] w-full translate-y-[32%] object-[-20%_30%] h-full object-cover" />
+                </div>
+                <div class="aspect-square bg-[#173460] rounded-xl sm:rounded-2xl"></div>
+                <div class="aspect-square overflow-hidden bg-slate-100 rounded-xl sm:rounded-2xl shadow-sm">
+                  <Image src={classImg} alt={t.imgAidsAlt3} width={140} height={140} loading="lazy" class="-rotate-45 scale-[1.15] w-full h-full object-cover object-right" />
+                </div>
+                <div class="aspect-square bg-[#12ba87] rounded-xl sm:rounded-2xl"></div>
+
+                <div class="aspect-square bg-[#12ba87] rounded-xl sm:rounded-2xl"></div>
+                <div class="aspect-square overflow-hidden bg-slate-100 rounded-xl sm:rounded-2xl shadow-sm">
+                  <Image src={homeworkImg} alt={t.imgAidsAlt4} width={140} height={140} loading="lazy" class="-rotate-45 scale-[1.25] w-full h-full object-cover object-center" />
+                </div>
+                <div class="aspect-square bg-[#fd6847] rounded-xl sm:rounded-2xl"></div>
+                <div class="aspect-square bg-[#173460] rounded-xl sm:rounded-2xl"></div>
+
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white p-8 rounded-3xl border border-slate-200/60 shadow-sm hover:shadow-md transition-all order-3 lg:col-span-5 lg:col-start-8 lg:row-start-2">
+            <div class="w-14 h-14 bg-[#12ba87] rounded-xl rotate-45 flex items-center justify-center mb-6 shadow-sm">
+              <svg class="w-7 h-7 text-white -rotate-45" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+            </div>
+            <h2 class="text-2xl font-extrabold text-[#173460] tracking-tight mb-4 uppercase">
+              {t.sectionTitlePedagogy}
+            </h2>
+            <p class="text-base text-slate-600 leading-relaxed font-normal">
+              {t.sectionDescPedagogy}
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-white py-16">
+      <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+        <div class="bg-slate-50 rounded-3xl border border-slate-200/60 p-8 sm:p-10 text-center shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
+          <div class="text-center md:text-left space-y-2">
+            <h3 class="text-2xl font-extrabold text-[#173460] tracking-tight uppercase">
+              {t.faqPromoHeading}
+            </h3>
+            <p class="text-slate-500 text-sm leading-relaxed max-w-md">
+              {lang === 'pl' ? 'Znajdź szybkie odpowiedzi na pytania dotyczące przebiegu lekcji, metod płatności, elastycznych grafików oraz korepetycji online.' :
+               lang === 'no' ? 'Finn raske svar på spørsmål om hvordan undervisningen foregår, betalingsmetoder, fleksible tider og leksehjelp på nett.' :
+               lang === 'en' ? 'Find quick answers to questions about lesson structure, payment methods, scheduling flexibility, and online tutoring.' :
+               'Знайдіть швидкі відповіді на запитання про структуру занять, методи оплати, гнучкий графік та онлайн-репетиторство.'}
+            </p>
+          </div>
+          <div class="shrink-0 w-full md:w-auto">
+            <a 
+              href={faqLink} 
+              class="inline-block w-full md:w-auto bg-[#173460] hover:bg-[#12ba87] text-white hover:text-[#0a192f] font-extrabold px-8 py-4 rounded-xl transition-all duration-200 shadow-md text-sm tracking-wider uppercase text-center"
+            >
+              {t.faqPromoBtn}
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-white pb-16 md:pb-24 animate-fade-in" aria-labelledby="cta-heading">
+      <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+        <div class="relative bg-[#173460] rounded-[32px] p-8 sm:p-12 md:p-16 text-center shadow-xl overflow-hidden">
+          
+          <div class="absolute w-32 h-32 bg-[#12ba87]/10 rounded-[24px] rotate-12 -top-10 -left-10 pointer-events-none"></div>
+          <div class="absolute w-40 h-40 bg-[#fd6847]/10 rounded-[40px] rotate-45 -bottom-12 -right-12 pointer-events-none"></div>
+
+          <div class="relative z-10 max-w-2xl mx-auto space-y-6">
+            <h3 id="cta-heading" class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-white leading-tight uppercase">
+              {t.ctaHeading}
+            </h3>
+            <p class="text-slate-300 text-base sm:text-lg leading-relaxed font-medium">
+              {t.ctaDesc}
+            </p>
+            <div class="pt-4">
+              <a 
+                href={contactLink} 
+                class="inline-block bg-white hover:bg-slate-50 text-[#173460] font-extrabold px-8 py-4 rounded-xl transition-all duration-200 shadow-lg text-base tracking-widest uppercase"
+              >
+                {t.ctaBtn}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</BaseLayout>
+
+<style>
+  .mosaic-container {
+    contain: layout style;
+  }
+  .mosaic-rotated {
+    will-change: transform;
+  }
+</style>
