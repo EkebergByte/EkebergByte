@@ -1,0 +1,6 @@
+.env
+
+# Śmieci Pythona
+__pycache__/
+*.pyc
+dump.txt
