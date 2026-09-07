@@ -1,2 +1,0 @@
-Get-ChildItem -Recurse -Include *.py, *.yaml, *.yml | Where-Object { $_.FullName -notmatch '\\(\.git|__pycache__|\.venv|env)\\' } | ForEach-Object { "=== FILE: $($_.FullName) ==="; Get-Content -Raw $_.FullName; "`n" } | Out-File -Encoding utf8 dump.txt
-(conda) PS C:\Programming\GitHubRepo\recession_model>
