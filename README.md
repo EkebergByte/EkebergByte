@@ -45,6 +45,7 @@ My academic and private interests center on quantitative finance and algorithmic
   <a href="https://react.dev/" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" /></a>
   <a href="https://nextjs.org/" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white" alt="Next.js" /></a>
   <a href="https://tailwindcss.com/" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" /></a>
+  <a href="https://developer.mozilla.org/en-US/docs/Web/CSS" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/CSS-663399?style=for-the-badge&logo=css&logoColor=white" alt="CSS" /></a>
   <a href="https://www.typescriptlang.org/" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" /></a>
 </p>
 
@@ -52,9 +53,9 @@ My academic and private interests center on quantitative finance and algorithmic
 <p>
   <a href="https://www.python.org/" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python" /></a>
   <a href="https://nodejs.org/en/" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white" alt="Node.js" /></a>
-  <a href="https://www.postgresql.org/" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL" /></a>
-  <a href="https://www.mongodb.com/" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB" /></a>
-  <a href="https://aws.amazon.com/" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/AWS-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white" alt="AWS" /></a>
+  <a href="https://www.rust-lang.org/" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/Rust-000000?style=for-the-badge&logo=rust&logoColor=white" alt="Rust" /></a>
+  <a href="https://github.com/morluto/rea" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/REA-7C3AED?style=for-the-badge&logoColor=white" alt="Reverse Engineer Anything (REA)" /></a>
+  <a href="https://aws.amazon.com/" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/AWS-232F3E?style=for-the-badge" alt="AWS" /></a>
   <a href="https://cloud.google.com/" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/Google_Cloud-4285F4?style=for-the-badge&logo=google-cloud&logoColor=white" alt="Google Cloud" /></a>
 </p>
 
@@ -70,11 +71,24 @@ My academic and private interests center on quantitative finance and algorithmic
 
 #### AI & Agentic Systems
 <p>
-  <a href="https://openai.com/" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/OpenAI-412991?style=for-the-badge&logo=openai&logoColor=white" alt="OpenAI" /></a>
+  <a href="https://openai.com/" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/OpenAI-412991?style=for-the-badge" alt="OpenAI" /></a>
   <a href="https://www.anthropic.com/" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/Anthropic-FF5D01?style=for-the-badge&logo=anthropic&logoColor=white" alt="Anthropic" /></a>
   <a href="https://www.deepmind.com/" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/DeepMind-00796B?style=for-the-badge&logo=deepmind&logoColor=white" alt="DeepMind" /></a>
+  <a href="https://www.deepseek.com/" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/DeepSeek-5786FE?style=for-the-badge&logo=deepseek&logoColor=white" alt="DeepSeek" /></a>
+  <a href="https://cline.bot/" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/Cline-18181B?style=for-the-badge&logo=cline&logoColor=white" alt="Cline" /></a>
   <a href="https://www.modelcontextprotocol.io/" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/Model_Context_Protocol-000000?style=for-the-badge&logoColor=white" alt="Model Context Protocol" /></a>
   <a href="https://www.langchain.com/" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/LangChain-22C55E?style=for-the-badge&logo=langchain&logoColor=white" alt="LangChain" /></a>
+</p>
+
+#### DevOps & Tooling
+<p>
+  <a href="https://www.docker.com/" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker" /></a>
+  <a href="https://git-scm.com/" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/Git-F03C2E?style=for-the-badge&logo=git&logoColor=white" alt="Git" /></a>
+  <a href="https://github.com/features/actions" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=githubactions&logoColor=white" alt="GitHub Actions" /></a>
+  <a href="https://www.linux.org/" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black" alt="Linux" /></a>
+  <a href="https://www.gnu.org/software/bash/" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/GNU_Bash-4EAA25?style=for-the-badge&logo=gnubash&logoColor=white" alt="GNU Bash" /></a>
+  <a href="https://vercel.com/" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white" alt="Vercel" /></a>
+  <a href="https://www.cloudflare.com/" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/Cloudflare-F38020?style=for-the-badge&logo=cloudflare&logoColor=white" alt="Cloudflare" /></a>
 </p>
 
 ---
